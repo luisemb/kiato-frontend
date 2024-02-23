@@ -11,6 +11,7 @@ export default {
   name: 'App',
   components: {},
   beforeCreate() {
+
     this.$store.commit('initializeStore')
 
     if (this.$store.state.token) {
