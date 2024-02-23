@@ -159,7 +159,7 @@ export default {
 
       if(validate){
         await axios
-            .post('/api/client/listClients', data)
+            .post('/api/workOrder/listWorkOrders', data)
             .then(response => {
               this.list = response.data
               this.page = 1
@@ -214,7 +214,7 @@ export default {
     }
 
     axios
-    .post('/api/client/listClientCoordinates', data)
+    .post('/api/workOrder/listClientCoordinates', data)
     .then(response => {
       this.list = response.data
       let coordinates = []

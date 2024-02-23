@@ -232,19 +232,19 @@
           <!-- Dark Logo-->
           <router-link to="/" class="logo logo-dark">
             <span class="logo-sm">
-              <img src="@/assets/images/logo-sm.png" alt="" height="22" />
+              <img src="@/assets/images/kiato_logo.png" alt="" height="22" />
             </span>
             <span class="logo-lg">
-              <img src="@/assets/images/logo-dark.png" alt="" height="17" />
+              <img src="@/assets/images/kiato_logo.png" alt="" height="17" />
             </span>
           </router-link>
           <!-- Light Logo-->
           <router-link to="/" class="logo logo-light">
             <span class="logo-sm">
-              <img src="@/assets/images/logo-sm.png" alt="" height="22" />
+              <img src="@/assets/images/kiato_logo.png" alt="" height="22" />
             </span>
             <span class="logo-lg">
-              <img src="@/assets/images/logo-light.png" alt="" height="17" />
+              <img src="@/assets/images/kiato_logo.png" alt="" height="17" />
             </span>
           </router-link>
           <button type="button" class=" btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
@@ -257,7 +257,7 @@
           <div class="container-fluid">
             <div id="two-column-menu">
               <SimpleBar class="twocolumn-iconview list-unstyled">
-                <a href="#" class="logo"><img src="@/assets/images/logo-sm.png" alt="Logo" height="22" /></a>
+                <a href="#" class="logo"><img src="@/assets/images/kiato_logo.png" alt="Logo" height="22" /></a>
                 <li>
                   <a class="nav-icon" href="#sidebarDashboards" role="button"
                     @click.prevent="updateMenu('sidebarDashboards')">

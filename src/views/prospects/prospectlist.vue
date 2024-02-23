@@ -256,7 +256,7 @@ export default {
         }
 
         await axios
-            .put('/api/client/updateClient', data)
+            .put('/api/workOrder/updateClient', data)
             .then(async response => {
               if (response) {
                 document.getElementById('close-modal').click();
@@ -405,7 +405,7 @@ export default {
         }
 
         await axios
-            .post('/api/client/createClientList', data)
+            .post('/api/workOrder/createClientList', data)
             .then(async response => {
               if (response.data['ID'] !== null) {
                 document.getElementById('closemodal').click();
@@ -534,7 +534,7 @@ export default {
       let clientInfo;
 
       await axios
-          .post('/api/client/getClient', data)
+          .post('/api/workOrder/getClient', data)
           .then(response => {
             clientInfo = response.data
             this.clientData = response.data
@@ -691,7 +691,7 @@ export default {
 
       if(validate){
         await axios
-            .post('/api/client/listClients', data)
+            .post('/api/workOrder/listWorkOrders', data)
             .then(response => {
               this.list = response.data
               this.page = 1
@@ -1051,7 +1051,7 @@ export default {
       }
 
       await axios
-          .post('/api/client/clientStatus', data)
+          .post('/api/workOrder/woStatus', data)
           .then(response => {
             this.prospectStatusList = response.data
           })
@@ -1080,7 +1080,7 @@ export default {
       }
 
       await axios
-          .put('/api/client/moveClient', data)
+          .put('/api/workOrder/moveClient', data)
           .then(async response => {
             document.getElementById('closeMove').click();
             if(response.status === 200){
@@ -1141,7 +1141,7 @@ export default {
               }
 
               axios
-                  .put('/api/client/delete', data)
+                  .put('/api/workOrder/delete', data)
                   .then(async response => {
                     if (response) {
                       await this.updateClientList()
@@ -1254,7 +1254,7 @@ export default {
       }
 
       await axios
-          .post('/api/client/clientStatus', data)
+          .post('/api/workOrder/woStatus', data)
           .then(response => {
             this.statusList = response.data
           })
@@ -1270,7 +1270,7 @@ export default {
           })
 
       await axios
-          .post('/api/client/clientTypes', data)
+          .post('/api/workOrder/woPriorities', data)
           .then(response => {
             this.typeList = response.data
           })
@@ -1321,7 +1321,7 @@ export default {
         }
 
         await axios
-            .post('/api/client/uploadList', data)
+            .post('/api/workOrder/uploadList', data)
             .then(async response => {
               if (response.status === 200) {
                 await Swal.fire({
@@ -1449,7 +1449,7 @@ export default {
         })
 
     await axios
-        .post('/api/client/clientStatus', data)
+        .post('/api/workOrder/woStatus', data)
         .then(response => {
           this.statusList=response.data
         })
@@ -1465,7 +1465,7 @@ export default {
         })
 
     await axios
-        .post('/api/client/clientTypes', data)
+        .post('/api/workOrder/woPriorities', data)
         .then(response => {
           this.typeList = response.data
         })
@@ -1484,7 +1484,7 @@ export default {
       document.getElementById(status).click()
     else
       await axios
-          .post('/api/client/listClients', data)
+          .post('/api/workOrder/listWorkOrders', data)
           .then(response => {
             this.list=response.data
             this.page = 1
@@ -1543,7 +1543,7 @@ export default {
     });
 
 
-    // check if some elements shot be visible for agents
+    // check if some elements shot be visible for techs
     if (this.viewUserGroup('SUPER_ADMIN_GROUP') || this.viewUserGroup('ADMIN_GROUP')){
       this.agentVisible = true;
     }else{

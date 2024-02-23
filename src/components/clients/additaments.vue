@@ -60,7 +60,7 @@ export default {
         }
 
         await axios
-            .post('/api/client/createAdditament', data)
+            .post('/api/workOrder/createAdditament', data)
             .then(async response => {
               this.$emit('additamentData', response);
 

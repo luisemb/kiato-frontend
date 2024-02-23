@@ -2,8 +2,8 @@
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
 import moment from "moment";
-import Multiselect from "@vueform/multiselect";
-import "@vueform/multiselect/themes/default.scss";
+// import Multiselect from "@vueform/multiselect";
+// import "@vueform/multiselect/themes/default.scss";
 import Layout from "../../layouts/main.vue";
 import PageHeader from "@/components/page-header";
 import appConfig from "../../../app.config";
@@ -11,7 +11,7 @@ import Swal from "sweetalert2";
 import Lottie from "@/components/widgets/lottie.vue";
 import axios from "axios";
 import animationData from "@/components/widgets/msoeawqm.json";
-import calendar from "../../components/appoinmentCalendar";
+// import calendar from "../../components/appoinmentCalendar";
 import jwt_decode from "jwt-decode";
 
 // components
@@ -20,28 +20,27 @@ import Papa from "papaparse";
 
 export default {
   page: {
-    title: "Agents",
+    title: "Technicians",
     meta: [{name: "description", content: appConfig.description}],
   },
   components: {
     Layout,
     PageHeader,
     lottie: Lottie,
-    Multiselect,
+    // Multiselect,
     flatPickr,
-    notes,
-    calendar
+    notes
   },
   data() {
     return{
-      title: "Agent List",
+      title: "Tech List",
       items: [
         {
-          text: "Agents",
+          text: "Technicians",
           href: "/",
         },
         {
-          text: "Agent List",
+          text: "Tech List",
           active: true,
         },
       ],
@@ -292,7 +291,7 @@ export default {
     addNewAgentModal() {
       this.resetAgentData()
       document.getElementById("addform").reset();
-      document.getElementById('agentModalLabel').innerHTML="Add Agent";
+      document.getElementById('agentModalLabel').innerHTML="Add Tech";
       document.getElementById('add-btn').style.display='block';
       document.getElementById('edit-btn').style.display='none';
       document.getElementById('editNoteOpen').style.display='none';
@@ -334,26 +333,6 @@ export default {
 
       if (!this.agentData.department) {
         this.errors.push('Department is required.');
-      }
-
-      if (!this.agentData.birthDate) {
-        this.errors.push('Birth date is required.');
-      }
-
-      if (!this.agentData.address) {
-        this.errors.push('Address is required.');
-      }
-
-      if (!this.agentData.agentNumber && this.agentData.status === 5) {
-        this.errors.push('Agent Number is required.');
-      }
-
-      if ((!this.agentData.insuranceLicense && this.agentData.status === 5) || !this.agentData.insuranceLicense) {
-        this.errors.push('is Insurance Licensed? is required.');
-      }
-
-      if ((!this.agentData.licenseNumber && this.agentData.status === 5) || (!this.agentData.licenseNumber && this.agentData.insuranceLicense === 1)) {
-        this.errors.push('License number is required.');
       }
 
       if(!this.errors.length) {
@@ -456,7 +435,7 @@ export default {
     async getUserInfo(id) {
       document.getElementById('edit-btn').style.display='block';
       document.getElementById('add-btn').style.display='none'
-      document.getElementById('agentModalLabel').innerHTML="Edit Agent"
+      document.getElementById('agentModalLabel').innerHTML="Edit Tech"
 
       const data = {
         token: localStorage.getItem('jwt'),
@@ -1118,92 +1097,6 @@ export default {
       }
       return true;
     },
-    async uploadFile(){
-
-      this.errors = []
-
-      if (document.getElementById('uploadLanguage').value === '') {
-        this.errors.push('Language is required.');
-      }
-
-      if (document.getElementById('uploadStatus').value === '') {
-        this.errors.push('Status is required.');
-      }
-
-      if (document.getElementById('uploadType').value === '') {
-        this.errors.push('Source is required.');
-      }
-
-      if (this.content.length === 0) {
-        this.errors.push('Please, upload and process your .csv file.');
-      }
-
-      if(this.errors.length === 0){
-
-        const data = {
-          token: localStorage.getItem('jwt'),
-          userEmail: localStorage.getItem('email'),
-          userID: localStorage.getItem('id'),
-          listOfData: this.content,
-          uploadTo:  localStorage.getItem('firstName') + ' ' + localStorage.getItem('lastname')
-              + ' | ' +localStorage.getItem('email'),
-          isProspect: 0,
-          language: document.getElementById('uploadLanguage').value,
-          status: document.getElementById('uploadStatus').value,
-          source: document.getElementById('uploadType').value,
-          department: this.selectedDepartmentForAgentList ,
-          listType: 1,
-        }
-
-        await axios
-            .post('/api/uploadAgentList', data)
-            .then(async response => {
-              if (response.status === 200) {
-                await Swal.fire({
-                  icon: 'success',
-                  title: 'Success',
-                  text: 'Uploaded successfully!'
-                });
-              }
-              setTimeout(function() {
-                location.reload()
-              }, 2000);
-            })
-            .catch(async error => {
-              if (error.response) {
-
-                let list = '';
-                for (const property in error.response.data) {
-                  this.errors.push(`${property}: ${error.response.data[property]}`)
-                  list += '\n' + '<b>' + error.response.data[property] + '</b>';
-                }
-
-                await Swal.fire({
-                  title: "Please check the following: " + list,
-                  icon: 'warning',
-                  confirmButtonClass: "btn btn-info",
-                  buttonsStyling: false,
-                  showCloseButton: true,
-                });
-
-              } else if (error.message) {
-                this.errors.push('Something was wrong, please contact your SysAdmin.')
-              }
-            })
-      }else{
-        let list = '';
-        for (let i = 0; i < this.errors.length; i++)
-          list += '\n' + '<b>' + this.errors[i]+ '</b>';
-
-        await Swal.fire({
-          title: "Please complete the form! " + list,
-          icon: 'warning',
-          confirmButtonClass: "btn btn-info",
-          buttonsStyling: false,
-          showCloseButton: true,
-        });
-      }
-    },
   },
   async mounted() {
 
@@ -1323,8 +1216,6 @@ export default {
         const search = this.data.searchValues.keyword.toLowerCase();
         return this.displayedPosts.filter((data) => {
           return (
-              data.address.toLowerCase().includes(search) ||
-              data.agentNumber.toLowerCase().includes(search) ||
               data.city.toLowerCase().includes(search) ||
               data.email.toLowerCase().includes(search) ||
                data.phoneNumber.toLowerCase().includes(search) ||
@@ -1371,75 +1262,60 @@ export default {
               <div class="col-sm-auto ms-auto">
                 <div class="hstack gap-2">
                   <div class="row">
-                    <div class="col-md-6" style="margin-top: 5px;">
-                      <div class="d-flex align-items-center gap-2">
-                        <span class="text-muted flex-shrink-0">Sort by: </span>
+<!--                    <div class="col-md-6" style="margin-top: 5px;">-->
+<!--                      <div class="d-flex align-items-center gap-2">-->
+<!--                        <span class="text-muted flex-shrink-0">Sort by: </span>-->
 
-                        <Multiselect class="form-control"
-                                     style="width:150px;padding: 0px;"
-                                     autocomplete="off"
-                                     @focus="handleFocus"
-                                     v-model="this.data.searchValues.sortBy"
-                                     :close-on-select="true"
-                                     :searchable="true"
-                                     :options="[
-                            { value: 'name', label: 'Name' },
-                            { value: 'lastName', label: 'Last Name' },
-                            { value: 'postalCode', label: 'Postal Code' },
-                            { value: 'modified', label: 'Modified On' },
-                            { value: 'created', label: 'created On' },
-                            ]"
-                                     @select="updateAgentList()"
-                        />
+<!--                        <Multiselect class="form-control"-->
+<!--                                     style="width:150px;padding: 0px;"-->
+<!--                                     autocomplete="off"-->
+<!--                                     @focus="handleFocus"-->
+<!--                                     v-model="this.data.searchValues.sortBy"-->
+<!--                                     :close-on-select="true"-->
+<!--                                     :searchable="true"-->
+<!--                                     :options="[-->
+<!--                            { value: 'name', label: 'Name' },-->
+<!--                            { value: 'lastName', label: 'Last Name' },-->
+<!--                            { value: 'postalCode', label: 'Postal Code' },-->
+<!--                            { value: 'modified', label: 'Modified On' },-->
+<!--                            { value: 'created', label: 'created On' },-->
+<!--                            ]"-->
+<!--                                     @select="updateAgentList()"-->
+<!--                        />-->
 
-                      </div>
-                    </div>
-                    <div class="col-md-6" style="margin-top: 5px;">
-                      <div class="d-flex align-items-center gap-2">
-                        <span class="text-muted flex-shrink-0">Order by: </span>
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                    <div class="col-md-6" style="margin-top: 5px;">-->
+<!--                      <div class="d-flex align-items-center gap-2">-->
+<!--                        <span class="text-muted flex-shrink-0">Order by: </span>-->
 
-                        <Multiselect class="form-control"
-                                     style="width:150px;padding: 0px;"
-                                     v-model="this.data.searchValues.orderBy"
-                                     autocomplete="off"
-                                     @focus="handleFocus"
-                                     :close-on-select="true"
-                                     :searchable="true"
-                                     :options="[
-                            { value: 'ASC', label: 'Ascendance' },
-                            { value: 'DESC', label: 'Descendant' },
-                            ]"
-                                     @select="updateAgentList()"
-                        />
+<!--                        <Multiselect class="form-control"-->
+<!--                                     style="width:150px;padding: 0px;"-->
+<!--                                     v-model="this.data.searchValues.orderBy"-->
+<!--                                     autocomplete="off"-->
+<!--                                     @focus="handleFocus"-->
+<!--                                     :close-on-select="true"-->
+<!--                                     :searchable="true"-->
+<!--                                     :options="[-->
+<!--                            { value: 'ASC', label: 'Ascendance' },-->
+<!--                            { value: 'DESC', label: 'Descendant' },-->
+<!--                            ]"-->
+<!--                                     @select="updateAgentList()"-->
+<!--                        />-->
 
-                      </div>
-                    </div>
+<!--                      </div>-->
+<!--                    </div>-->
                   </div>
                   <div class="row">
-                    <div class="col-md-5" style="margin-top: 5px;">
+                    <div class="col-md-6" style="margin-top: 5px;">
                       <button type="button" class="btn btn-soft-success float-end" href="#open-filters" data-bs-toggle="modal">
                         <i class="ri-filter-line align-bottom me-1"></i> Filters
                       </button>
                     </div>
-                    <div class="col-md-5" style="margin-top: 5px;">
+                    <div class="col-md-6" style="margin-top: 5px;">
                       <button type="button" class="btn btn-soft-success float-end" id="create-btn" data-bs-toggle="modal" href="#agentModal" @click="addNewAgentModal" style="white-space: nowrap;">
-                        <i class="ri-add-line align-bottom me-1"></i> Add Agent
+                        <i class="ri-add-line align-bottom me-1"></i> Add Tech
                       </button>
-                    </div>
-                    <div class="col-md-2" style="margin-top: 5px;">
-                      <button
-                          type="button"
-                          id="dropdownMenuLink1"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false"
-                          class="btn btn-soft-info"
-                      >
-                        <i class="ri-more-2-fill"></i>
-                      </button>
-                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
-                        <li><a class="dropdown-item" href="#interiewCalendar" data-bs-toggle="modal">Open Calendar</a></li>
-                        <li><a class="dropdown-item" href="#uploadAgents" data-bs-toggle="modal">Upload Agents</a></li>
-                      </ul>
                     </div>
                   </div>
                 </div>
@@ -1650,12 +1526,6 @@ export default {
                         <option v-bind:style="(!viewUserGroup('SUPER_ADMIN_GROUP') && status.statusID === 9)? 'display: none;' : ''" v-for="(status, statusIndex) of statusList" :key="statusIndex" v-bind:value="status.statusID">{{ status.name }}</option>
                       </select>
                     </div>
-                    <div class="col-lg-3">
-                      <label for="editSource" class="form-label">Source</label>
-                      <select class="form-select mb-2" aria-label="Source" id="editSource" v-model="this.agentData.source">
-                        <option v-for="(source, sourceIndex) of sourcesList" :key="sourceIndex" v-bind:value="source.sourceID">{{ source.name }}</option>
-                      </select>
-                    </div>
                   </div>
                   <div class="row">
                     <div class="col-lg-6">
@@ -1663,7 +1533,7 @@ export default {
                       <input type="text" id="editPhoneNumber" class="form-control mb-2" placeholder="Phone number" required v-model="this.agentData.phone"/>
                     </div>
                     <div class="col-lg-6">
-                      <label for="editDepartment" class="form-label">Department</label>
+                      <label for="editDepartment" class="form-label">Locations</label>
                       <select class="form-select mb-2" aria-label="Department" id="editDepartment" name="editDepartment"
                               v-model="this.agentData.department" v-if="(departmentList.length > 1)">
                         <option v-for="(department, index) of departmentList"  :key="index"
@@ -1704,41 +1574,6 @@ export default {
                       <label for="editCountry" class="form-label">Country</label>
                       <input type="text" id="editCountry" class="form-control mb-2" placeholder="Enter Country" required v-model="this.agentData.country"/>
                     </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-lg-6">
-                      <label for="editPostalCode" class="form-label">Postal code</label>
-                      <input type="text" id="editPostalCode" class="form-control mb-2" placeholder="Enter Address" required v-model="this.agentData.zipCode"/>
-                    </div>
-                    <div class="col-lg-6">
-                      <label for="editInterview" class="form-label mb-2">Interview</label>
-                      <flat-pickr
-                          placeholder="Select Interview date/time"
-                          v-model="this.agentData.interview"
-                          :config="dateTimeConfig"
-                          class="form-control flatpickr-input"
-                          id="editInterview" data-enable-time></flat-pickr>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-lg-4">
-                      <label for="editLicensed" class="form-label">Is Licensed?</label>
-                      <select class="form-select mb-2" aria-label="Department" id="editLicensed" v-model="this.agentData.insuranceLicense">
-                        <option value="0">No</option>
-                        <option value="1">Yes</option>
-                      </select>
-                    </div>
-                    <div class="col-lg-4">
-                      <label for="editAgentNumber" class="form-label">License Number</label>
-                      <input type="text" id="editLicenseNumber" class="form-control mb-2" placeholder="Enter Agent Number" v-model="this.agentData.licenseNumber"/>
-                    </div>
-                    <div class="col-lg-4">
-                      <label for="editAgentNumber" class="form-label">Agent Number</label>
-                      <input type="text" id="editAgentNumber" class="form-control mb-2" placeholder="Enter Agent Number" v-model="this.agentData.agentNumber"/>
-                    </div>
-                  </div>
-                  <div class="row">
-
                   </div>
                   <div class="row" id="editNoteOpen" style="display: none;">
                     <notes :dataList="notesData" @onFire="getNotes()" :idNumber="1"> </notes>
@@ -1972,125 +1807,7 @@ export default {
       </div>
     </div>
 
-    <!-- Upload agents calendar Modal -->
-    <b-modal id="interiewCalendar" title="Fullscreen | Agents Appoinment Calendar" class="v-modal-custom" fullscreen>
-      <div class="row">
-        <calendar></calendar>
-      </div>
-    </b-modal>
 
-    <b-modal id="uploadAgents" title="Fullscreen | Upload Agents" class="v-modal-custom" fullscreen>
-      <div class="row">
-        <div class="col-lg-12">
-          <form>
-            <!-- end card -->
-
-            <div class="card">
-              <div class="card-body">
-                <div class="vstack gap-2">
-                  <h5 class="fs-14 mb-1">Upload Your List</h5>
-                  <h6> <span style="color:red; font-size: 0.7em;">Please, upload a .csv file from Lincoln or convert the .xls/.xlsx to .csv</span></h6>
-                  <input class="form-control" id="listFile" type="file"
-                         accept="text/csv" @change="selectedFile"/>
-                  <div class="row">
-                    <div class="col-lg-3">
-                      <label for="editLanguage" class="form-label">Language</label>
-                      <select class="form-select mb-2" aria-label="Language" id="uploadLanguage" name="uploadLanguage">
-                        <option value="">...</option>
-                        <option value="1">English</option>
-                        <option value="2">Spanish</option>
-                        <option value="3">Take from list</option>
-                      </select>
-                    </div>
-                    <div class="col-lg-3">
-                      <label for="editStatus" class="form-label">Status</label>
-                      <select class="form-select mb-2" aria-label="Status" id="uploadStatus" name="uploadStatus">
-                        <option value="">...</option>
-                        <option v-for="(status, statusIndex) of statusList" :key="statusIndex" v-bind:value="status.statusID">{{ status.name }}</option>
-                      </select>
-                    </div>
-                    <div class="col-lg-3">
-                      <label for="editType" class="form-label">Source</label>
-                      <select class="form-select mb-2" aria-label="Status" id="uploadType" name="uploadType">
-                        <option value="">...</option>
-                        <option v-for="(type, typeIndex) of sourcesList" :key="typeIndex" v-bind:value="type.sourceID">{{ type.name }}</option>
-                      </select>
-                    </div>
-                    <div class="col-lg-3" v-if="viewUserGroup('SUPER_ADMIN_GROUP')">
-                      <label for="departmentType" class="form-label">Departments</label>
-                      <select class="form-select mb-2" aria-label="Status" id="departmentType" name="departmentType" v-model="this.data.selectedDepartmentForAgentList">
-                        <option value="">...</option>
-                        <option v-for="(type, typeIndex) of departmentList" :key="typeIndex" v-bind:value="type.departmentID">{{ type.name }}</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="border rounded" v-for="(file, index) of files" :key="index">
-                    <div class="d-flex align-items-center p-2">
-                      <div class="flex-grow-1">
-                        <div class="pt-1">
-                          <h5 class="fs-14 mb-1" data-dz-name="">
-                            {{ file.name }}
-                          </h5>
-                          <p class="fs-13 text-muted mb-0" data-dz-size="">
-                            <strong>{{ file.size / 1024 }}</strong> KB
-                          </p>
-                          <strong class="error text-danger" data-dz-errormessage=""></strong>
-                        </div>
-                      </div>
-                      <div class="flex-shrink-0 ms-3">
-                        <button data-dz-remove="" class="btn btn-sm btn-danger" @click="deleteRecord">
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="text-end mb-3">
-                    <button type="button" class="btn btn-success w-sm" @click="handleFileUpload">Process File</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- end card -->
-          </form>
-        </div>
-        <!-- end col -->
-
-        <div class="card">
-          <div class="card-body">
-
-            <!-- Tables Border Colors -->
-            <table class="table table-bordered border-secondary table-nowrap" v-if="parsed">
-              <thead>
-              <tr>
-                <th scope="col">
-                  ID
-                </th>
-                <th v-for="(header, key) in content.meta.fields"
-                    v-bind:key="'header-'+key" scope="col">{{ header }}
-                </th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="(row, rowKey) in content.data"
-                  v-bind:key="'row-'+rowKey">
-                <td>
-                  <b>{{ (rowKey+1) }}</b>
-                </td>
-                <td v-for="(column, columnKey) in content.meta.fields"
-                    v-bind:key="'row-'+rowKey+'-column-'+columnKey">
-                  {{ content.data[rowKey][column] }}
-                </td>
-              </tr>
-              </tbody>
-            </table>
-
-          </div>
-        </div>
-        <div class="text-end mb-3">
-          <button type="button" class="btn btn-success w-sm" @click="uploadFile">Upload File</button>
-        </div>
-      </div>
-    </b-modal>
   </Layout>
 </template>
 <style>

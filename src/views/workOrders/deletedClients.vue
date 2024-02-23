@@ -14,19 +14,10 @@ import "@vueform/multiselect/themes/default.scss";
 
 // components
 import notes from '../../components/users/notes';
-import messages from '../../views/widgets/messages';
-import econtacts from '../../components/clients/econtacts';
-import {ref, watch} from "vue";
-import useVuelidate from "@vuelidate/core";
-import jwt_decode from "jwt-decode";
-import SimpleTypeahead from "vue3-simple-typeahead";
-import 'vue3-simple-typeahead/dist/vue3-simple-typeahead.css'; //Optional default CSS
-import { Upload } from '@progress/kendo-vue-upload';
-import '@progress/kendo-theme-default/dist/all.css';
 
 export default {
   page: {
-    title: "Clients",
+    title: "Deleted Clients",
     meta: [{name: "description", content: appConfig.description}],
   },
   components: {
@@ -35,22 +26,18 @@ export default {
     flatPickr,
     Multiselect,
     Lottie,
-    notes,
-    messages,
-    SimpleTypeahead,
-    Upload,
-    econtacts
+    notes
   },
   data() {
     return{
-      title: "Client List",
+      title: "Deleted Client List",
       items: [
         {
           text: "Clients",
           href: "/",
         },
         {
-          text: "Client List",
+          text: "Deleted Client List",
           active: true,
         },
       ],
@@ -58,7 +45,6 @@ export default {
       page: 1,
       perPage: 100,
       pages: [],
-      errors: [],
       searchQuery: null,
       timeConfig: {
         enableTime: false,
@@ -76,18 +62,16 @@ export default {
       data: {
         token: localStorage.getItem('jwt'),
         searchValues: {
-          type: '0',
+          type: '',
           noteSearch: '',
           keyword: '',
           language: '3',
           clients: 1,
-          status: '0',
+          status: 0,
           sortBy: 'name',
           orderBy: 'ASC',
-          dateRange: '0',
-          department: '0' ,
           toDate: new Date().toLocaleDateString('en-us', { year:"numeric", month:"long", day:"numeric"}) ,
-          fromDate: new Date(new Date().setFullYear(new Date().getFullYear() - 1)).toLocaleDateString('en-us', { year:"numeric", month:"long", day:"numeric"})
+          fromDate: new Date(new Date().setFullYear(new Date().getFullYear() - 1)).toLocaleDateString('en-us', { year:"numeric", month:"long", day:"numeric"}),
         },
       },
       defaultOptions: { animationData: animationData },
@@ -116,38 +100,6 @@ export default {
       statusList: {},
       prospectStatusList: {},
       notesData: [],
-      messagesData: [],
-      file: [],
-      content: [],
-      parsed: false,
-      itemsSearch: [],
-      spectedColumns: [
-        "Last Name",
-        "First Name",
-        "Address",
-        "City",
-        "State",
-        "Zip",
-        "Daytime Phone",
-        "Evening Phone",
-        "Age",
-        "Media",
-        "Language",
-        "Received",
-        "Assigned",
-        "Second Pre-Approach Letter"
-      ],
-      agentVisible: true,
-      idNumber: 1,
-      preview: null,
-      image: null,
-      preview_list: [],
-      image_list: [],
-      uploadFiles: [],
-      crmUserID: localStorage.getItem('id'),
-      crmSelectedUser: localStorage.getItem('selectedUser'),
-      fileList: [],
-      eContactlist: []
     }
   },
   watch: {
@@ -175,15 +127,12 @@ export default {
       document.getElementById('date').value=data.date;
     },
     addNewAgentModal() {
-
       this.openCreate = 1;
       this.resetAgentData()
       document.getElementById("addform").reset();
       document.getElementById('agentModalLabel').innerHTML="Add Client";
       document.getElementById('add-btn').style.display='block';
-      // document.getElementById('editNoteOpen').style.display='none';
       document.getElementById('edit-btn').style.display='none';
-      document.getElementById("addform").reset();
     },
     async checkClientExists(){
 
@@ -198,7 +147,7 @@ export default {
 
       if (this.validEmail(data.potentialClientEmail)) {
         await axios
-            .post('/api/client/emailExists', data)
+            .post('/api/workOrder/emailExists', data)
             .then(response => {
               let div = document.querySelector(".createEmail");
 
@@ -275,7 +224,7 @@ export default {
         }
 
         await axios
-            .put('/api/client/updateClient', data)
+            .put('/api/workOrder/updateClient', data)
             .then(async response => {
               if (response) {
                 document.getElementById('close-modal').click();
@@ -354,6 +303,7 @@ export default {
 
       if (this.clientData.type  === 'undefined') {
         this.errors.push('Lead/Client Source is required.');
+        console.log(this.clientData)
       }
 
       if (this.clientData.gender !== 'M' && this.clientData.gender !== 'F') {
@@ -375,12 +325,12 @@ export default {
         let note = {'note': this.clientData.note};
 
         let formValues = {'address': this.clientData.address, 'birthday': this.clientData.birthday,
-        'city': this.clientData.city, 'country': this.clientData.country, 'department': this.clientData.departmentID,
-        'email': this.clientData.email, 'firstName': this.clientData.firstName,
-        'interview': this.clientData.interview, 'language': this.clientData.language, 'lastName': this.clientData.lastName,
-        'leadType': this.clientData.leadType, 'note': this.clientData.note, 'phoneNumber': this.clientData.phoneNumber,
-        'postalCode': this.clientData.postalCode,'state': this.clientData.state,'status': this.clientData.status,
-        'length': this.clientData.length, 'gender': this.clientData.gender};
+          'city': this.clientData.city, 'country': this.clientData.country, 'department': this.clientData.departmentID,
+          'email': this.clientData.email, 'firstName': this.clientData.firstName,
+          'interview': this.clientData.interview, 'language': this.clientData.language, 'lastName': this.clientData.lastName,
+          'leadType': this.clientData.leadType, 'note': this.clientData.note, 'phoneNumber': this.clientData.phoneNumber,
+          'postalCode': this.clientData.postalCode,'state': this.clientData.state,'status': this.clientData.status,
+          'length': this.clientData.length, 'gender': this.clientData.gender};
 
         // let form = document.getElementById("addform");
 
@@ -388,16 +338,16 @@ export default {
         //   let e = form.elements[i];
         //
         //   console.log(e)
-          // if(e.name !== '') {
-          //   formValues[e.name] = e.value;
-          // }
-          // formValues['editGender'] = document.querySelector("input[type='radio'][name=editGender]:checked").value;
-          //
-          // if(this.isClientList){
-          //   formValues['editType'] = document.querySelector("#editType").value;
-          // }else{
-          //   formValues['editType'] = document.querySelector("#editType1").value;
-          // }
+        // if(e.name !== '') {
+        //   formValues[e.name] = e.value;
+        // }
+        // formValues['editGender'] = document.querySelector("input[type='radio'][name=editGender]:checked").value;
+        //
+        // if(this.isClientList){
+        //   formValues['editType'] = document.querySelector("#editType").value;
+        // }else{
+        //   formValues['editType'] = document.querySelector("#editType1").value;
+        // }
         // }
 
         let values = {0: {formValues, beneficiaries, emergencyContacts, addedChilds, note}}
@@ -412,7 +362,7 @@ export default {
         }
 
         await axios
-            .post('/api/client/createClientList', data)
+            .post('/api/workOrder/createClientList', data)
             .then(async response => {
               if (response.data['ID'] !== null) {
                 document.getElementById('closemodal').click();
@@ -423,8 +373,6 @@ export default {
                   text: 'Client created successfully!'
                 });
               }
-
-
             })
             .catch(async error => {
               if (error.response) {
@@ -587,19 +535,15 @@ export default {
         ID: id
       }
 
-      // document.getElementById('editNoteOpen').style.display='block';
-      await this.getNotes(id)
       let clientInfo;
 
       await axios
-          .post('/api/client/getClient', data)
+          .post('/api/workOrder/getClient', data)
           .then(response => {
             clientInfo = response.data;
             this.setClientData(response.data);
             localStorage.setItem('selectedUser', clientInfo.ID);
             localStorage.setItem('selectedUserName', clientInfo.firstName + ' ' + clientInfo.lastName);
-            this.getMapsLink()
-            this.getFiles(id);
           })
           .catch(error => {
             if (error.response) {
@@ -612,7 +556,7 @@ export default {
             }
           })
     },
-    async updateClientList(status=this.data.searchValues.status) {
+    async updateClientList(status=0) {
 
       let validate = true;
       let errors = [];
@@ -657,7 +601,6 @@ export default {
         errors.push("From Date and To Date (range) couldn't be larger than a year (365 days)!");
         validate = false;
       }
-      let typeAhead = document.getElementById('typeahead_id')
 
       const data = {
         token: localStorage.getItem('jwt'),
@@ -665,16 +608,14 @@ export default {
         searchValues: this.data.searchValues,
         userEmail: localStorage.getItem('email'),
         userID: localStorage.getItem('id'),
-        deleted: 0,
-        agentSearch: (typeAhead != null && typeof(typeAhead) != 'undefined' ) ? typeAhead.value : []
+        deleted: 1,
       }
 
       if(validate){
         await axios
-            .post('/api/client/listClients', data)
+            .post('/api/workOrder/listWorkOrders', data)
             .then(response => {
               this.list = response.data
-              this.page = 1
               this.setPages()
             })
             .catch(error => {
@@ -710,23 +651,17 @@ export default {
       var isphone = /^(\+{0,})(\d{0,})([(]{1}\d{1,3}[)]{0,}){0,}(\s?\d+|\+\d{2,3}\s{1}\d+|\d+){1}[\s|-]?\d+([\s|-]?\d+){1,2}(\s){0,}$/gm.test(phone);
       return isphone;
     },
-    formatDate: function (date, format){
+    formatDate: function(date, format){
       date = moment(date).format(format)
       return date;
     },
-    formatPhone: function (phone, flag=0) {
+    formatPhone: function(phone, flag=0) {
 
       // if flag == 1 put value in phone Edit
-      phone = phone.replace(/\D/g, '')
-
-      if(phone !== undefined) {
-        if(phone.length > 10) {
-          phone = phone.substring(1)
-        }
-        const x = phone.match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+      if(phone !== undefined){
+        const x = phone.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
         phone = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
-
-      } else {
+      }else{
         phone = ''
       }
 
@@ -736,7 +671,7 @@ export default {
         document.getElementById('editPhoneNumber').value = phone;
       }
     },
-    setAgentData: function (data) {
+    setAgentData: function(data) {
       this.agentData.email=data.email;
       this.agentData.firstName=data.firstName;
       this.agentData.lastName=data.lastName;
@@ -754,7 +689,7 @@ export default {
       this.agentData.createdBy=data.createdBy;
       this.agentData.insuranceLicense=data.isLicensed;
     },
-    resetAgentData: function (){
+    resetAgentData: function(){
       this.agentData =
           {username: '',
             email: '',
@@ -775,11 +710,9 @@ export default {
             insuranceLicense: '',
             licenseNumber: ''
           }
-      this.clientData = [];
     },
     setPages() {
       let numberOfPages = Math.ceil(this.list.length / this.perPage);
-      this.pages = []
       for (let index = 1; index <= numberOfPages; index++) {
         this.pages.push(index);
       }
@@ -1156,7 +1089,7 @@ export default {
       this.clientData.departmentID=clientInfo.departmentID;
       this.clientData.leadType= clientInfo.leadType;
       this.clientData.birthday= this.formatDate(clientInfo.dateOfBirth, 'DD MMM, YYYY');
-      this.clientData.interview= this.formatDate(clientInfo.interviewDate, 'MMMM D, YYYY H:mm A');
+      this.clientData.interview= this.formatDate(clientInfo.interviewDate, 'MMMM D, YYYY h:mm A');
       this.clientData.address=clientInfo.address;
       this.clientData.state=clientInfo.state;
       this.clientData.country=clientInfo.country;
@@ -1165,14 +1098,14 @@ export default {
       this.clientData.createdBy=clientInfo.createdBy;
       this.clientData.insuranceLicense=clientInfo.isLicensed;
     },
-    async getNotes (id = localStorage.getItem('selectedUser'), name) {
+    async getNotes (id = localStorage.getItem('selectedUser')) {
       const data = {
         token: localStorage.getItem('jwt'),
         userID: localStorage.getItem('id'),
         agentID: id,
         clientID: id,
       }
-      localStorage.setItem('selectedUserName', name)
+
       localStorage.setItem('selectedUser', id)
 
       let url = '';
@@ -1201,7 +1134,7 @@ export default {
       }
 
       await axios
-          .post('/api/client/clientStatus', data)
+          .post('/api/workOrder/woStatus', data)
           .then(response => {
             this.prospectStatusList = response.data
           })
@@ -1230,7 +1163,7 @@ export default {
       }
 
       await axios
-          .put('/api/client/moveClient', data)
+          .put('/api/workOrder/moveClient', data)
           .then(async response => {
             document.getElementById('closeMove').click();
             if(response.status === 200){
@@ -1260,7 +1193,7 @@ export default {
       var statusButton= document.getElementById(status);
       statusButton.click();
     },
-    deleteClient(ID) {
+    deleteclient(ID) {
       const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
           confirmButton: "btn btn-danger ml-2",
@@ -1272,9 +1205,9 @@ export default {
       swalWithBootstrapButtons
           .fire({
             title: "Are you sure?",
-            text: "You won't be able to revert this!",
+            text: "This client will be recover and send to the workOrders list.",
             icon: "warning",
-            confirmButtonText: "Yes, delete it!",
+            confirmButtonText: "Yes, recover it!",
             cancelButtonText: "No, cancel!",
             showCancelButton: true,
           })
@@ -1286,17 +1219,18 @@ export default {
                 userID: localStorage.getItem('id'),
                 userName: localStorage.getItem('firstName') + ' ' + localStorage.getItem('lastname'),
                 userEmail: localStorage.getItem('email'),
-                agentID: localStorage.getItem('selectedUser')
+                agentID: localStorage.getItem('selectedUser'),
+                deleted: 0
               }
 
               axios
-                  .put('/api/client/delete', data)
+                  .put('/api/workOrder/delete', data)
                   .then(async response => {
                     if (response) {
                       await this.updateClientList()
                       await swalWithBootstrapButtons.fire(
-                          "Deleted!",
-                          "Client has been deleted.",
+                          "Success!",
+                          "Client has been recovered.",
                           "success"
                       );
                     }
@@ -1336,332 +1270,6 @@ export default {
     handleFocus(e){
       e.target.setAttribute("autocomplete", "nope");
     },
-    getMapsLink(){
-      let link = 'https://maps.google.com/?q='
-      let clientData = this.clientData;
-      if (clientData.address.length > 0){
-        link += '+'+this.clientData.address
-      }
-      if (clientData.postalCode.length > 0){
-        link += '+'+clientData.postalCode
-      }
-      if (clientData.city.length > 0){
-        link += '+'+clientData.city
-      }
-      if (clientData.state.length > 0){
-        link += '+'+clientData.state
-      }
-
-      if(link !== 'https://maps.google.com/?q='){
-        document.getElementById("gMapsLink").href = link;
-      } else {
-        document.getElementById("gMapsLink").href = '#';
-      }
-
-    },
-    parseFile(){
-      var allowedExtensions = /\.(csv|pdf|jpg|png|jpeg)$/i;
-      if (allowedExtensions.exec(this.file.name)) {
-          console.log('yes')
-      } else {
-        Swal.fire({
-          title: "File extension not supported!",
-          icon: 'warning',
-          confirmButtonClass: "btn btn-info",
-          buttonsStyling: false,
-          showCloseButton: true,
-        });
-      }
-    },
-    async changeType(){
-      const data = {
-        token: localStorage.getItem('jwt'),
-        userEmail: localStorage.getItem('email'),
-        userID: localStorage.getItem('id'),
-        isProspect: document.getElementById('isProspect').value,
-        deleted: 0,
-      }
-
-      await axios
-          .post('/api/client/clientStatus', data)
-          .then(response => {
-            this.statusList = response.data
-          })
-          .catch(error => {
-            if (error.response) {
-
-              if (error.response.data.detail === 'Your session is expired!') {
-                this.$router.push('logout')
-              }
-
-              Swal.fire("Oops!", "Status could not be loaded, please contact your SysAdmin.", "error")
-            }
-          })
-
-      await axios
-          .post('/api/client/clientTypes', data)
-          .then(response => {
-            this.typeList = response.data
-          })
-          .catch(error => {
-            if (error.response) {
-
-              if (error.response.data.detail === 'Your session is expired!') {
-                this.$router.push('logout')
-              }
-
-              Swal.fire("Oops!", "Status could not be loaded, please contact your SysAdmin.", "error")
-            }
-          })
-    },
-    async uploadFile(){
-
-      this.errors = []
-
-      if (document.getElementById('uploadLanguage').value === '') {
-        this.errors.push('Language is required.');
-      }
-
-      if (document.getElementById('uploadStatus').value === '') {
-        this.errors.push('Status is required.');
-      }
-
-      if (document.getElementById('uploadType').value === '') {
-        this.errors.push('Source is required.');
-      }
-
-      if (this.content.length === 0) {
-        this.errors.push('Please, upload and process your .csv file.');
-      }
-
-      if(this.errors.length === 0){
-        const data = {
-          token: localStorage.getItem('jwt'),
-          userEmail: localStorage.getItem('email'),
-          userID: localStorage.getItem('id'),
-          listOfData: this.content,
-          uploadTo:  localStorage.getItem('firstName') + ' ' + localStorage.getItem('lastname')
-              + ' | ' +localStorage.getItem('email'),
-          isProspect: 0,
-          language: document.getElementById('uploadLanguage').value,
-          status: document.getElementById('uploadStatus').value,
-          source: document.getElementById('uploadType').value,
-          listType: 1,
-        }
-
-        await axios
-            .post('/api/client/uploadList', data)
-            .then(async response => {
-              if (response.status === 200) {
-                await Swal.fire({
-                  icon: 'success',
-                  title: 'Success',
-                  text: 'Uploaded successfully!'
-                });
-              }
-              setTimeout(function() {
-                location.reload()
-              }, 2000);
-            })
-            .catch(async error => {
-              if (error.response) {
-
-                let list = '';
-                for (const property in error.response.data) {
-                  this.errors.push(`${property}: ${error.response.data[property]}`)
-                  list += '\n' + '<b>' + error.response.data[property] + '</b>';
-                }
-
-                await Swal.fire({
-                  title: "Please check the following: " + list,
-                  icon: 'warning',
-                  confirmButtonClass: "btn btn-info",
-                  buttonsStyling: false,
-                  showCloseButton: true,
-                });
-
-              } else if (error.message) {
-                this.errors.push('Something was wrong, please contact your SysAdmin.')
-              }
-            })
-      }else{
-        let list = '';
-        for (let i = 0; i < this.errors.length; i++)
-          list += '\n' + '<b>' + this.errors[i]+ '</b>';
-
-        await Swal.fire({
-          title: "Please complete the form! " + list,
-          icon: 'warning',
-          confirmButtonClass: "btn btn-info",
-          buttonsStyling: false,
-          showCloseButton: true,
-        });
-      }
-    },
-    compare (o1, o2){
-      for(let p in o1){
-        // eslint-disable-next-line no-prototype-builtins
-        if(o1.hasOwnProperty(p)){
-          if(o1[p] !== o2[p]){
-            return false;
-          }
-        }
-      }
-      for(let p in o2){
-        // eslint-disable-next-line no-prototype-builtins
-        if(o2.hasOwnProperty(p)){
-          if(o1[p] !== o2[p]){
-            return false;
-          }
-        }
-      }
-      return true;
-    },
-    deleteRecord(ele){
-      ele.target.parentElement.parentElement.remove();
-    },
-    viewUserGroup(request){
-      const currentRole = jwt_decode(localStorage.getItem('jwt'))
-      return currentRole.userGroup.includes(request)
-    },
-    async getSMS (id = localStorage.getItem('selectedUser'), name) {
-
-      const data = {
-        token: localStorage.getItem('jwt'),
-        userID: localStorage.getItem('id'),
-        agentID: id,
-        clientID: id,
-      }
-
-      localStorage.setItem('selectedUserName', name)
-      localStorage.setItem('selectedUser', id)
-
-      let url = '';
-      url = '/api/client/getSMSConversation';
-
-      await axios
-          .post(url, data)
-          .then(response => {
-            this.messagesData = response.data;
-          })
-          .catch(error => {
-            if (error.response) {
-              Swal.fire("Oops!", "Notes could not be loaded, please contact your SysAdmin.", "error")
-            }
-          })
-    },
-    async searchAgents() {
-      let typeAhead = document.getElementById('typeahead_id')
-
-      const data = {
-        token: localStorage.getItem('jwt'),
-        searchValue: (typeAhead != null && typeof(typeAhead) != 'undefined' ) ? typeAhead.value : [],
-        condition: 9
-      }
-
-      if(data['searchValue'].length > 3) {
-        await axios
-            .post('/api/userFinder', data)
-            .then(async response => {
-              this.itemsSearch = response.data;
-            })
-            .catch(async error => {
-              if (error.response) {
-                let list = '';
-                for (const property in error.response.data) {
-                  this.errors.push(`${property}: ${error.response.data[property]}`)
-                  list += '\n' + '<b>' + error.response.data[property] + '</b>';
-                }
-
-                await Swal.fire({
-                  title: "Please check the following: " + list,
-                  icon: 'warning',
-                  confirmButtonClass: "btn btn-info",
-                  buttonsStyling: false,
-                  showCloseButton: true,
-                });
-
-              } else if (error.message) {
-                this.errors.push('Something was wrong, please contact your SysAdmin.')
-              }
-            })
-      }
-
-
-    },
-    viewPermission(request) {
-      const currentRole = jwt_decode(localStorage.getItem('jwt'))
-      return currentRole.vueViews.includes(request)
-    },
-    async getFiles (id) {
-
-      const data = {
-        token: localStorage.getItem('jwt'),
-        ID: id,
-        isClient: 1
-      }
-
-      await axios
-          .post('/api/comm/getFiles', data)
-          .then(response => {
-            this.fileList = response.data;
-          })
-          .catch(error => {
-            if (error.response) {
-
-              if(error.response.data.detail === 'Your session is expired!'){
-                this.$router.push('logout')
-              }
-
-              Swal.fire("Oops!", "Something was wrong, please contact your SysAdmin.", "error")
-            }
-          })
-    },
-    async getEcontacts(){
-
-      const data = {
-        token: localStorage.getItem('jwt'),
-        isProspect: 0,
-        userEmail: localStorage.getItem('email'),
-        clientID: localStorage.getItem('selectedUser'),
-        userID: localStorage.getItem('id'),
-      }
-
-      await axios
-          .post('/api/client/getecontacts', data)
-          .then(response => {
-            this.eContactlist = []
-            this.eContactlist = response.data;
-          })
-          .catch(error => {
-            if (error.response) {
-              Swal.fire("Oops!", "Departments could not be loaded, please contact your SysAdmin.", "error")
-            }
-          })
-    },
-    async downloadFile(url) {
-      const a = document.createElement('a')
-      a.href = url
-      a.download = url.split('/').pop()
-      a.click()
-    },
-    reset: function() {
-      this.image = null;
-      this.preview = null;
-      this.image_list = [];
-      this.preview_list = [];
-    },
-    onAddFile(event) {
-      console.log('onAdd: ', event.affectedFiles);
-      this.uploadFiles= event.newState;
-    },
-    onRemoveFile(event) {
-      console.log('onRemove: ', event.affectedFiles);
-      this.uploadFiles= event.newState;
-    },
-    refreshContacts() {
-      this.getEcontacts();
-    },
   },
   async mounted() {
 
@@ -1672,16 +1280,13 @@ export default {
     const urlParams = new URLSearchParams(queryString);
     const status = urlParams.get(field)
 
-    let typeAhead = document.getElementById('typeahead_id')
-
     const data = {
       token: localStorage.getItem('jwt'),
       searchValues: this.data.searchValues,
       userEmail: localStorage.getItem('email'),
       userID: localStorage.getItem('id'),
       isProspect: 0,
-      deleted: 0,
-      agentSearch: (typeAhead != null && typeof(typeAhead) != 'undefined' ) ? typeAhead.value : []
+      deleted: 1,
     }
 
     await axios
@@ -1700,7 +1305,7 @@ export default {
         })
 
     await axios
-        .post('/api/client/clientStatus', data)
+        .post('/api/workOrder/woStatus', data)
         .then(response => {
           this.statusList=response.data
         })
@@ -1716,7 +1321,7 @@ export default {
         })
 
     await axios
-        .post('/api/client/clientTypes', data)
+        .post('/api/workOrder/woPriorities', data)
         .then(response => {
           this.typeList = response.data
         })
@@ -1735,10 +1340,9 @@ export default {
       document.getElementById(status).click()
     else
       await axios
-          .post('/api/client/listClients', data)
+          .post('/api/workOrder/listWorkOrders', data)
           .then(response => {
             this.list=response.data
-            this.page = 1
             this.setPages()
           })
           .catch(error => {
@@ -1797,64 +1401,6 @@ export default {
       let button_id = this.id;
       document.getElementById('rowAdditaments' + button_id).remove()
     });
-
-    // check if some elements shot be visible for agents
-    this.agentVisible = !!(this.viewUserGroup('SUPER_ADMIN_GROUP') || this.viewUserGroup('ADMIN_GROUP'));
-
-    document.querySelectorAll(".checkout-tab").forEach(function (form) {
-      // next tab
-      form.querySelectorAll(".nexttab").forEach(function (nextButton) {
-        var tabEl = form.querySelectorAll('button[data-bs-toggle="pill"]');
-        tabEl.forEach(function (item) {
-          item.addEventListener("show.bs.tab", function (event) {
-            event.target.classList.add("done");
-          });
-        });
-        nextButton.addEventListener("click", function () {
-          var nextTab = nextButton.getAttribute("data-nexttab");
-          document.getElementById(nextTab).click();
-        });
-      });
-
-      //Pervies tab
-      form.querySelectorAll(".previestab").forEach(function (prevButton) {
-        prevButton.addEventListener("click", function () {
-          var prevTab = prevButton.getAttribute("data-previous");
-          var totalDone = prevButton
-              .closest("form")
-              .querySelectorAll(".custom-nav .done").length;
-          for (var i = totalDone - 1; i < totalDone; i++) {
-            prevButton.closest("form").querySelectorAll(".custom-nav .done")[i]
-                ? prevButton
-                    .closest("form")
-                    .querySelectorAll(".custom-nav .done")[i].classList.remove("done")
-                : "";
-          }
-          document.getElementById(prevTab).click();
-        });
-      });
-
-      // Step number click
-      var tabButtons = form.querySelectorAll('button[data-bs-toggle="pill"]');
-      tabButtons.forEach(function (button, i) {
-        button.setAttribute("data-position", i);
-        button.addEventListener("click", function () {
-          form.querySelectorAll(".custom-nav .done").length > 0
-              ? form
-                  .querySelectorAll(".custom-nav .done")
-                  .forEach(function (doneTab) {
-                    doneTab.classList.remove("done");
-                  })
-              : "";
-          for (var j = 0; j <= i; j++) {
-            tabButtons[j].classList.contains("active")
-                ? tabButtons[j].classList.remove("done")
-                : tabButtons[j].classList.add("done");
-          }
-        });
-      });
-    });
-
   },
   computed: {
     displayedPosts() {
@@ -1881,39 +1427,9 @@ export default {
       }
     },
   },
-  setup() {
-    let files = ref([]);
-    let dropzoneFile = ref("");
-    const drop = (e) => {
-      dropzoneFile.value = e.dataTransfer.files[0];
-      files.value.push(dropzoneFile.value);
-      console.log(files)
-    };
-    const selectedFile = (  ) => {
-      dropzoneFile.value = document.getElementById('listFile').files[0];
-      files.value.push(dropzoneFile.value);
-    };
-    watch(
-        () => [...files.value],
-        (currentValue) => {
-          return currentValue;
-        }
-    );
-    return {
-      dropzoneFile,
-      drop,
-      selectedFile,
-      v$: useVuelidate(),
-      files
-    };
-  },
 };
 </script>
-<style>
-.row-spacer{
-  margin-bottom: 10px;
-}
-</style>
+
 <template>
   <Layout>
     <PageHeader :title="title" :items="items"/>
@@ -1928,7 +1444,6 @@ export default {
                       type="text"
                       class="form-control search"
                       placeholder="Search for..."
-                      title="Search by (Phone number, City, Postal code, Name, Last name, Full Name, Address, State)"
                       v-model="this.data.searchValues.keyword"
                       @change="this.data.searchValues.keyword.length >= 3 ? updateClientList(): ''"
                       v-on:keyup.enter="this.data.searchValues.keyword === '' ? updateClientList() : ''"
@@ -1938,75 +1453,47 @@ export default {
               </div>
               <div class="col-sm-auto ms-auto">
                 <div class="hstack gap-2">
-                  <div class="row">
-                    <div class="col-md-6" style="margin-top: 5px;">
-                      <div class="d-flex align-items-center gap-2">
-                        <span class="text-muted flex-shrink-0">Sort by: </span>
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="text-muted flex-shrink-0">Sort by: </span>
 
-                        <Multiselect class="form-control"
-                                     style="width:150px;padding: 0px;"
-                                     @focus="handleFocus"
-                                     v-model="this.data.searchValues.sortBy"
-                                     :close-on-select="true"
-                                     :searchable="true"
-                                     :options="[
+                    <Multiselect class="form-control"
+                                 style="width:150px;padding: 0px;"
+                                 autocomplete="off"
+                                 @focus="handleFocus"
+                                 v-model="this.data.searchValues.sortBy"
+                                 :close-on-select="true"
+                                 :searchable="true"
+                                 :options="[
                             { value: 'name', label: 'Name' },
-                            { value: 'lastName', label: 'Last Name' },
                             { value: 'postalCode', label: 'Postal Code' },
                             { value: 'modified', label: 'Modified On' },
                             { value: 'created', label: 'created On' },
                             ]"
-                                     @select="updateClientList()"
-                        />
+                                 @select="updateClientList()"
+                    />
 
-                      </div>
-                    </div>
-                    <div class="col-md-6" style="margin-top: 5px;">
-                      <div class="d-flex align-items-center gap-2">
-                        <span class="text-muted flex-shrink-0">Order by: </span>
+                  </div>
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="text-muted flex-shrink-0">Order by: </span>
 
-                        <Multiselect class="form-control"
-                                     style="width:150px;padding: 0px;"
-                                     v-model="this.data.searchValues.orderBy"
-                                     @focus="handleFocus"
-                                     :close-on-select="true"
-                                     :searchable="true"
-                                     :options="[
+                    <Multiselect class="form-control"
+                                 style="width:150px;padding: 0px;"
+                                 v-model="this.data.searchValues.orderBy"
+                                 autocomplete="off"
+                                 @focus="handleFocus"
+                                 :close-on-select="true"
+                                 :searchable="true"
+                                 :options="[
                             { value: 'ASC', label: 'Ascendance' },
                             { value: 'DESC', label: 'Descendant' },
                             ]"
-                                     @select="updateClientList()"
-                        />
+                                 @select="updateClientList()"
+                    />
 
-                      </div>
-                    </div>
                   </div>
-                  <div class="row">
-                    <div class="col-md-5" style="margin-top: 5px;">
-                      <button type="button" class="btn btn-soft-success float-end" href="#open-filters" data-bs-toggle="modal">
-                        <i class="ri-filter-line align-bottom me-1"></i> Filters
-                      </button>
-                    </div>
-                    <div class="col-md-5" style="margin-top: 5px;">
-                      <button type="button" class="btn btn-soft-success float-end" id="create-btn" data-bs-toggle="modal" href="#agentModal" @click="addNewAgentModal" style="white-space: nowrap;">
-                        <i class="ri-add-line align-bottom me-1"></i> Add Client
-                      </button>
-                    </div>
-                    <div class="col-md-2" style="margin-top: 5px;">
-                      <button
-                          type="button"
-                          id="dropdownMenuLink1"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false"
-                          class="btn btn-soft-info"
-                      >
-                        <i class="ri-more-2-fill"></i>
-                      </button>
-                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
-                        <li><a class="dropdown-item" href="#uploadLeads" data-bs-toggle="modal">Upload Clients</a></li>
-                      </ul>
-                    </div>
-                  </div>
+                  <button type="button" class="btn btn-soft-success add-btn" href="#open-filters" data-bs-toggle="modal">
+                    <i class="ri-filter-line align-bottom me-1"></i> Filters
+                  </button>
                 </div>
               </div>
             </div>
@@ -2044,85 +1531,82 @@ export default {
               </a>
             </li>
           </ul>
-          <div class="table-responsive">
-            <table class="table align-middle table-nowrap mb-0">
-              <thead class="table-light">
-              <tr>
-                <th scope="col" style="width: 50px">
-                  <div class="form-check">
-                    <input
-                        class="form-check-input"
-                        type="checkbox"
-                        id="checkAll"
-                        value="option"
-                    />
-                  </div>
-                </th>
-                <th scope="col">Name</th>
-                <th scope="col" v-if="agentVisible">Department</th>
-                <th scope="col">Email</th>
-                <th scope="col">Phone</th>
-                <th scope="col">Create Date</th>
-                <th scope="col" v-if="this.data.searchValues.status === '2'">Appmnt D.</th>
-                <th scope="col">Status</th>
-                <th scope="col">Actions</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="(data, index) of resultQuery" :key="index">
-                <td>
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="cardtableCheck01">
-                    <label class="form-check-label" for="cardtableCheck01"></label>
-                  </div>
-                </td>
-                <td>{{ data.firstName }} {{ data.lastName }}</td>
-                <td v-if="agentVisible">{{ data.departmentName }}</td>
-                <td>{{ data.email }}</td>
-                <td>{{ formatPhone(data.phoneNumber) }}</td>
-                <td> {{ formatDate(data.createdOn, 'MMMM Do YYYY, h:mmA') }} </td>
-                <td v-if="this.data.searchValues.status === '2'">{{ formatDate(data.interviewDate, 'MMMM Do YYYY, h:mmA')  }}</td>
-                <td><a href="javascript:void(0);" v-bind:style="'color:'+data.colors"  @click="filterStatus(data.statusName)">{{ data.statusName}}</a></td>
-                <td>
-                  <ul class="list-inline hstack gap-2 mb-0">
-                    <li class="list-inline-item" data-bs-toggle="modal" href="#agentModal" data-bs-trigger="hover" data-bs-placement="top" title="Edit" @click="getClientInfo(data.ID)">
-                      <a class="edit-item-btn" href="javascript:void(0);"><i class="ri-pencil-fill align-bottom text-muted"></i></a>
-                    </li>
-                    <li class="list-inline-item" data-bs-toggle="modal" href="#open-messages" data-bs-trigger="hover" data-bs-placement="top" title="Messages" v-if="agentVisible">
-                      <a href="javascript:void(0);" class="text-muted d-inline-block"  @click="getSMS(data.ID)">
-                        <i class="ri-mail-send-line fs-16"></i>
-                      </a>
-                    </li>
-                    <li class="list-inline-item" data-bs-toggle="modal" data-bs-trigger="hover"  href="#changeStatus"  data-bs-placement="top" title="Update Status" @click="getProspectStatus(data.ID)">
-                      <a href="javascript:void(0);" ><i class="ri-refresh-fill align-bottom text-muted"></i></a>
-                    </li>
-                    <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Delete" @click="deleteClient(data.ID)">
-                      <a class="remove-item-btn" data-bs-toggle="modal" href="javascript:void(0);">
-                        <i class="ri-delete-bin-fill align-bottom text-muted"></i>
-                      </a>
-                    </li>
-                  </ul>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-            <div class="noresult" v-if="list.length <= 0">
-              <div class="text-center">
-                <lottie
-                    class="avatar-xl"
-                    colors="primary:#121331,secondary:#08a88a"
-                    :options="defaultOptions"
-                    :height="75"
-                    :width="75"
-                />
-                <h5 class="mt-2">Sorry! No Result Found</h5>
-                <p class="text-muted mb-0">
-                  We've searched and didn't find any
-                  client for you.
-                </p>
-              </div>
+          <table class="table align-middle table-nowrap mb-0">
+            <thead class="table-light">
+            <tr>
+              <th scope="col" style="width: 50px">
+                <div class="form-check">
+                  <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="checkAll"
+                      value="option"
+                  />
+                </div>
+              </th>
+              <th scope="col">Name</th>
+              <th scope="col">Department</th>
+              <th scope="col">Email</th>
+              <th scope="col">Phone</th>
+              <th scope="col">Create Date</th>
+              <th scope="col">Status</th>
+              <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(data, index) of resultQuery" :key="index">
+              <td>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="cardtableCheck01">
+                  <label class="form-check-label" for="cardtableCheck01"></label>
+                </div>
+              </td>
+              <td>{{ data.firstName }} {{ data.lastName }}</td>
+              <td>{{ data.departmentName }}</td>
+              <td>{{ data.email }}</td>
+              <td>{{ formatPhone(data.phoneNumber) }}</td>
+              <td> {{ formatDate(data.createdOn, 'MMMM Do YYYY, h:mmA') }} </td>
+              <td><a href="javascript:void(0);" v-bind:style="'color:'+data.colors"  @click="filterStatus(data.statusName)">{{ data.statusName}}</a></td>
+              <td>
+                <ul class="list-inline hstack gap-2 mb-0">
+                  <li class="list-inline-item" data-bs-toggle="modal" href="#agentModal" data-bs-trigger="hover" data-bs-placement="top" title="Edit" @click="getClientInfo(data.ID)">
+                    <a class="edit-item-btn" href="javascript:void(0);"><i class="ri-pencil-fill align-bottom text-muted"></i></a>
+                  </li>
+                  <li class="list-inline-item" data-bs-toggle="modal" href="#open-notes" data-bs-trigger="hover" data-bs-placement="top" title="Notes" @click="getNotes(data.ID)">
+                    <a href="javascript:void(0);" class="text-muted d-inline-block" >
+                      <i class="ri-sticky-note-line fs-16"></i>
+                    </a>
+                  </li>
+                  <li class="list-inline-item" data-bs-toggle="modal" data-bs-trigger="hover"  href="#changeStatus"  data-bs-placement="top" title="Update Status" @click="getProspectStatus(data.ID)">
+                    <a href="javascript:void(0);" ><i class="ri-refresh-fill align-bottom text-muted"></i></a>
+                  </li>
+                  <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Delete" @click="deleteclient(data.ID)">
+                    <a class="remove-item-btn" data-bs-toggle="modal" href="javascript:void(0);">
+                      <i class="ri-device-recover-fill align-bottom text-muted"></i>
+                    </a>
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <div class="noresult" v-if="list.length <= 0">
+            <div class="text-center">
+              <lottie
+                  class="avatar-xl"
+                  colors="primary:#121331,secondary:#08a88a"
+                  :options="defaultOptions"
+                  :height="75"
+                  :width="75"
+              />
+              <h5 class="mt-2">Sorry! No Result Found</h5>
+              <p class="text-muted mb-0">
+                We've searched and didn't find any
+                client for you.
+              </p>
             </div>
-            <div class="d-flex justify-content-end mt-3" v-if="resultQuery.length >= 0">
+          </div>
+          <div class="d-flex justify-content-end mt-3" v-if="resultQuery.length >= 0">
             <div class="pagination-wrap hstack gap-2">
               <a
                   class="page-item pagination-prev disabled"
@@ -2158,15 +1642,14 @@ export default {
               </a>
             </div>
           </div>
-          </div>
         </div>
       </div>
       <!--end col-->
     </div>
     <!--end row-->
 
-    <!--  Add client modal  -->
-    <div class="modal zoomIn" id="agentModal" tabindex="-1" aria-labelledby="agentModalLabel" aria-hidden="true" data-bs-focus="false">
+    <!--  Add agent modal  -->
+    <div class="modal zoomIn" id="agentModal" tabindex="-1" aria-labelledby="agentModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 1000px;">
         <div class="modal-content">
           <div class="modal-header bg-light p-3">
@@ -2174,7 +1657,7 @@ export default {
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                     id="close-modal"></button>
           </div>
-          <form id="addform" @submit.prevent="" autocomplete="off">
+          <form id="addform" @submit.prevent="">
             <div class="modal-body">
               <h6> <span style="color:red; font-size: 0.7em;">Required fields (*)</span></h6>
               <input type="hidden" id="id"/>
@@ -2184,34 +1667,34 @@ export default {
                     <div class="col-lg-8">
                       <label for="editEmail" class="form-label">Email</label>
                       <input type="text" id="editEmail" name="editEmail" class="form-control mb-2 createEmail" placeholder="Enter Email"
-                             v-model="this.clientData.email" autocomplete="off">
+                             v-model="this.clientData.email">
                       <div class="invalid-feedback">
                         This email is already in use.
                       </div>
                     </div>
                     <div class="col-lg-4">
                       <label for="editCreatedBy" class="form-label">Created By</label>
-                      <input type="text" id="editCreatedBy" name="editCreatedBy" class="form-control mb-2" disabled v-model="this.clientData.createdBy"  autocomplete="off">
+                      <input type="text" id="editCreatedBy" name="editCreatedBy" class="form-control mb-2" disabled v-model="this.clientData.createdBy">
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-lg-4">
                       <label for="editFirstName" class="form-label">First Name <span style="color:red; font-size: 0.7em;">(*)</span></label>
-                      <input type="text" id="editFirstName" name="editFirstName" class="form-control mb-2" placeholder="Enter First Name" v-model="this.clientData.firstName" required  autocomplete="off">
+                      <input type="text" id="editFirstName" name="editFirstName" class="form-control mb-2" placeholder="Enter First Name" v-model="this.clientData.firstName" required>
                     </div>
                     <div class="col-lg-4">
                       <label for="editLastName" class="form-label">Last Name <span style="color:red; font-size: 0.7em;">(*)</span></label>
-                      <input type="text" id="editLastName" name="editLastName" class="form-control mb-2" placeholder="Enter Last Name" v-model="this.clientData.lastName" required  autocomplete="off">
+                      <input type="text" id="editLastName" name="editLastName" class="form-control mb-2" placeholder="Enter Last Name" v-model="this.clientData.lastName" required>
                     </div>
                     <div class="col-lg-4">
                       <label for="editGender" class="form-label"> Gender <span style="color:red; font-size: 0.7em;">(*)</span></label>
                       <br>
                       <div class="form-check-success form-check-inline" style="margin-top: 0.8em;">
-                        <input class="form-check-input" type="radio" name="editGender" id="editGender" value="M" v-model="this.clientData.gender"/>
+                        <input class="form-check-input" type="radio" name="editGender" id="editGender" value="M" v-model="this.clientData.gender">
                         <label class="form-check-label" for="editGender"> &nbsp; Male</label>
                       </div>
                       <div class="form-check-success form-check-inline" style="margin-top: 0.8em;">
-                        <input class="form-check-input" type="radio" name="editGender" id="editGender2" value="F" v-model="this.clientData.gender"/>
+                        <input class="form-check-input" type="radio" name="editGender" id="editGender2" value="F" v-model="this.clientData.gender">
                         <label class="form-check-label" for="editGender2"> &nbsp; Female</label>
                       </div>
                     </div>
@@ -2231,7 +1714,7 @@ export default {
                       </select>
                     </div>
                     <div class="col-lg-4">
-                      <label for="editType" class="form-label">client Source <span style="color:red; font-size: 0.7em;">(*)</span></label>
+                      <label for="editType" class="form-label">Type clients <span style="color:red; font-size: 0.7em;">(*)</span></label>
                       <select class="form-select mb-2" aria-label="Status" id="editType" name="editType" v-model="this.clientData.leadType">
                         <option v-for="(type, typeIndex) of typeList" :key="typeIndex" v-bind:value="type.name">{{ type.name }}</option>
                       </select>
@@ -2270,7 +1753,7 @@ export default {
                   </div>
                   <div class="row">
                     <div class="col-lg-8">
-                      <label for="editAddress" class="form-label">Address</label>&nbsp;<code><a href="#" target="_blank" id="gMapsLink">Google Maps</a></code>
+                      <label for="editAddress" class="form-label">Address</label>
                       <input type="text" id="editAddress" name="editAddress" class="form-control mb-2" placeholder="Enter Address" required v-model="this.clientData.address"/>
                     </div>
                     <div class="col-lg-4">
@@ -2347,204 +1830,6 @@ export default {
                       </div>
                     </fieldset>
                   </div>
-
-                  <div class="row" v-if="this.openCreate == 0">
-                    <div class="row">
-                      <div class="col-xl-12" style="margin-top: 10px;">
-                        <div class="card">
-                          <div class="card-body checkout-tab">
-                            <form action="#">
-                              <div class="step-arrow-nav mt-n3 mx-n3 mb-3">
-                                <ul class="nav nav-pills nav-justified custom-nav" role="tablist">
-                                  <li class="nav-item" role="presentation">
-                                    <button
-                                        class="nav-link fs-15 p-3 active"
-                                        id="pills-bill-notes-tab"
-                                        data-bs-toggle="pill"
-                                        data-bs-target="#pills-pills-notes"
-                                        type="button"
-                                        role="tab"
-                                        aria-controls="pills-pills-notes"
-                                        aria-selected="true"
-                                    >
-                                      <i
-                                          class="
-                                        ri-sticky-note-line
-                                        fs-16
-                                        p-2
-                                        bg-soft-primary
-                                        text-primary
-                                        rounded-circle
-                                        align-middle
-                                        me-2
-                                      "
-                                      ></i>
-                                      Notes
-                                    </button>
-                                  </li>
-                                  <li class="nav-item" role="presentation">
-                                    <button
-                                        class="nav-link fs-15 p-3"
-                                        id="pills-econtact"
-                                        data-bs-toggle="pill"
-                                        data-bs-target="#pills-econtact-tab"
-                                        type="button"
-                                        role="tab"
-                                        aria-controls="pills-econtact-tab"
-                                        aria-selected="false"
-                                        @click="getEcontacts()"
-                                    >
-                                      <i
-                                          class="
-                          ri-alarm-warning-line
-                          fs-16
-                          p-2
-                          bg-soft-primary
-                          text-primary
-                          rounded-circle
-                          align-middle
-                          me-2
-                        "
-                                      ></i>
-                                      E. Contacts
-                                    </button>
-                                  </li>
-                                  <li class="nav-item" role="presentation">
-                                    <button
-                                        class="nav-link fs-15 p-3"
-                                        id="pills-payment-tab"
-                                        data-bs-toggle="pill"
-                                        data-bs-target="#pills-payment"
-                                        type="button"
-                                        role="tab"
-                                        aria-controls="pills-payment"
-                                        aria-selected="false"
-                                    >
-                                      <i
-                                          class="
-                                                ri-folder-upload-line
-                                                fs-16
-                                                p-2
-                                                bg-soft-primary
-                                                text-primary
-                                                rounded-circle
-                                                align-middle
-                                                me-2
-                                              "
-                                      ></i>
-                                      Upload Files
-                                    </button>
-                                  </li>
-                                </ul>
-                              </div>
-
-                              <div class="tab-content">
-                                <div
-                                    class="tab-pane fade show active"
-                                    id="pills-pills-notes"
-                                    role="tabpanel"
-                                    aria-labelledby="pills-notes"
-                                >
-                                  <div>
-                                    <div class="row" id="editNoteOpen">
-                                      <notes :dataList="notesData" @onFire="getNotes()" :idNumber="1"> </notes>
-                                    </div>
-                                  </div>
-                                </div>
-                                <!-- end tab pane -->
-
-                                <div
-                                    class="tab-pane fade"
-                                    id="pills-econtact-tab"
-                                    role="tabpanel"
-                                    aria-labelledby="pills-econtact"
-                                >
-                                  <econtacts :eContactlist="eContactlist" @eContactData="refreshContacts"></econtacts>
-                                </div>
-                                <!-- end tab pane -->
-
-                                <div
-                                    class="tab-pane fade"
-                                    id="pills-payment"
-                                    role="tabpanel"
-                                    aria-labelledby="pills-payment-tab"
-                                >
-                                  <div>
-                                    <div class="col-12 text-center">
-                                      <h1 class="mb-3">Upload Files</h1>
-                                      <h6><b>Allowed Files:</b> <p>.jpg, .png, .docx, .xls, .jpeg, .pdf</p></h6>
-                                      <h6><b>Max. File Size:</b> <p>5 mb</p></h6>
-                                    </div>
-
-                                    <div class="col-md-12">
-                                      <form enctype='multipart/form-data'>
-                                        <div class="form-group">
-                                          <label for="uploadFiles">Select Image</label>
-                                          <upload
-                                              :restrictions="{
-                                                 allowedExtensions: [ '.jpg', '.png', '.docx', '.xls', '.jpeg', '.pdf'],
-                                                 maxFileSize: 5000000
-                                             }"
-                                              :auto-upload="false"
-                                              :files="uploadFiles"
-                                              @add="onAddFile"
-                                              @remove="onRemoveFile"
-                                              :multiple="true"
-                                              :with-credentials="false"
-                                              :save-url="'https://a3j63o3n9.dmbgroup.online/api/comm/uploadFile?id='+this.crmUserID+'&selectedUser='+this.crmSelectedUser+'&isClient='+1"
-                                              :remove-url="'https://a3j63o3n9.dmbgroup.online/api/comm/uploadFile?id='+this.crmUserID+'&selectedUser='+this.crmSelectedUser+'&isClient='+1"
-                                          />
-                                        </div>
-                                      </form>
-                                      <div class="table-responsive" style="margin-top: 20px;">
-                                        <button type="button" class="btn btn-soft-success float-end" @click="getFiles(this.crmSelectedUser)"
-                                        style="margin-bottom: 10px;"> Refresh File List </button>
-                                        <table class="table align-middle table-nowrap mb-0">
-                                          <thead class="table-light">
-                                          <tr>
-                                            <th scope="col">File Name</th>
-                                            <th scope="col">Created On</th>
-                                            <th scope="col">Actions</th>
-                                          </tr>
-                                          </thead>
-                                          <tbody>
-                                          <tr v-for="(data, index) of this.fileList" :key="index">
-                                            <td>{{ data.fileName }}</td>
-                                            <td>{{ formatDate(data.createdOn, 'MMMM Do YYYY, h:mmA') }}</td>
-                                            <td>
-                                              <ul class="list-inline hstack gap-2 mb-0">
-                                                <li class="list-inline-item" data-bs-toggle="modal" href="#agentModal" data-bs-trigger="hover"
-                                                    data-bs-placement="top" title="Download" @click="downloadFile(data.path)">
-                                                  <a class="edit-item-btn">
-                                                    <i class="ri-file-download-line align-bottom text-muted"></i>
-                                                  </a>
-                                                </li>
-                                                <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Delete">
-                                                  <a class="remove-item-btn" data-bs-toggle="modal" href="javascript:void(0);">
-                                                    <i class="ri-delete-bin-fill align-bottom text-muted"></i>
-                                                  </a>
-                                                </li>
-                                              </ul>
-                                            </td>
-                                          </tr>
-                                          </tbody>
-                                        </table>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <!-- end tab pane -->
-                              </div>
-                              <!-- end tab content -->
-                            </form>
-                          </div>
-                          <!-- end card body -->
-                        </div>
-                        <!-- end card -->
-                      </div>
-                      <!-- end col -->
-                    </div>
-                  </div>
                 </div>
                 <!--end col-->
               </div>
@@ -2553,9 +1838,9 @@ export default {
 
             <div class="modal-footer">
               <div class="hstack gap-2 justify-content-end">
-                <button type="button" class="btn btn-light" id="closemodal" data-bs-dismiss="modal">Close </button>
-                <button type="submit" class="btn btn-success" id="add-btn" @click="createClient">Save </button>
-                <button type="button" class="btn btn-success" id="edit-btn" @click="updateClient">Update </button>
+                <button type="button" class="btn btn-light" id="closemodal" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success" id="add-btn" @click="createClient">Save</button>
+                <button type="button" class="btn btn-success" id="edit-btn" @click="updateClient">Update</button>
               </div>
             </div>
           </form>
@@ -2564,7 +1849,7 @@ export default {
     </div>
 
     <!-- Filters Modal -->
-    <div id="open-filters" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;" data-bs-focus="false">
+    <div id="open-filters" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -2582,8 +1867,7 @@ export default {
               <div class="col-lg-6">
                 <label for="filterType" class="form-label">Type</label>
                 <select class="form-select mb-2" aria-label="Status" id="filterType" name="filterType" v-model="this.data.searchValues.type">
-                  <option value="0">All</option>
-                  <option v-for="(type, typeIndex) of typeList" :key="typeIndex" v-bind:value="type.name">{{ type.name }}</option>
+                  <option v-for="(type, typeIndex) of typeList" :key="typeIndex" v-bind:value="type.code">{{ type.name }}</option>
                 </select>
               </div>
               <div class="col-lg-6">
@@ -2633,43 +1917,6 @@ export default {
             <div class="row">
 
             </div>
-            <div class="row">
-              <div class="col-lg-6">
-                <label for="filterDateRange" class="form-label">Time Range</label>
-                <select class="form-select mb-2" id="filterDateRange" name="filterDateRange" v-model="this.data.searchValues.dateRange">
-                  <option value="0" selected>...</option>
-                  <option value="1">Until 2 year Ago</option>
-                  <option value="2">Until 4 year Ago</option>
-                  <option value="3">Until 5 year Ago</option>
-                  <option value="4">Begin of times</option>
-                </select>
-              </div>
-              <div class="col-lg-6">
-                <span v-if="viewUserGroup('SUPER_ADMIN_GROUP')">
-                  <label for="filterDateRange" class="form-label">Department</label>
-                    <select class="form-select mb-2" aria-label="Department" id="filterDepartment" name="filterDepartment"
-                            v-model="this.data.searchValues.department">
-                        <option value="0"> All</option>
-                        <option v-for="(department, index) of departmentList"  :key="index"
-                                v-bind:value="department.departmentID"> {{ department.name }}
-                        </option>
-                    </select>
-                </span>
-              </div>
-            </div>
-            <div class="col-md-12" v-if="viewUserGroup('SUPER_ADMIN_GROUP') || viewUserGroup('ADMIN_GROUP')">
-              <label for="typeahead_id" class="form-label">Find By Agent</label>
-              <SimpleTypeahead
-                  id="typeahead_id"
-                  placeholder="Type your agent search..."
-                  :items="this.itemsSearch"
-                  :minInputLength="3"
-                  :class="'form-control mb-2'"
-                  @onInput="searchAgents"
-                  @selectItem="selectItemEventHandler"
-              >
-              </SimpleTypeahead>
-            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
@@ -2683,16 +1930,7 @@ export default {
     <div id="open-notes" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
       <div class="modal-dialog">
         <div class="modal-content">
-          <notes :dataList="notesData" @onFire="getNotes()" :idNumber="2"></notes>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-    <!-- Messages Modal -->
-    <div id="open-messages" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <messages :messageList="messagesData" @onFire="getSMS()" :idNumber="1"></messages>
+          <notes :dataList="notesData" @onFire="getNotes()"> </notes>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
@@ -2708,7 +1946,7 @@ export default {
           <div class="modal-body">
             <div class="row">
               <div class="col-lg-12">
-                <label for="moveStatus" class="form-label">Status</label>
+                <label for="filterStatus" class="form-label">Status</label>
                 <select class="form-select mb-2" aria-label="Status" id="moveStatus">
                   <option value="0">All</option>
                   <option v-for="(status, statusIndex) of prospectStatusList" :key="statusIndex" v-bind:value="status.statusID">{{ status.name }}</option>
@@ -2724,112 +1962,10 @@ export default {
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-    <!-- Upload Agents Modal -->
-    <b-modal id="uploadLeads" title="Fullscreen | Upload Clients" class="v-modal-custom" fullscreen>
-      <div class="row">
-        <div class="col-lg-12">
-          <form>
-            <!-- end card -->
-
-            <div class="card">
-              <div class="card-body">
-                <div class="vstack gap-2">
-                  <h5 class="fs-14 mb-1">Upload Your List</h5>
-                  <h6> <span style="color:red; font-size: 0.7em;">Please, upload a .csv file from Lincoln or convert the .xls/.xlsx to .csv</span></h6>
-                  <input class="form-control" id="listFile" type="file"
-                         accept="text/csv" @change="selectedFile"/>
-                  <div class="row">
-                    <div class="col-lg-3">
-                      <label for="editLanguage" class="form-label">Language</label>
-                      <select class="form-select mb-2" aria-label="Language" id="uploadLanguage" name="uploadLanguage">
-                        <option value="">...</option>
-                        <option value="1">English</option>
-                        <option value="2">Spanish</option>
-                        <option value="3">Take from list</option>
-                      </select>
-                    </div>
-                    <div class="col-lg-3">
-                      <label for="editStatus" class="form-label">Status</label>
-                      <select class="form-select mb-2" aria-label="Status" id="uploadStatus" name="uploadStatus">
-                        <option value="">...</option>
-                        <option v-for="(status, statusIndex) of statusList" :key="statusIndex" v-bind:value="status.statusID">{{ status.name }}</option>
-                      </select>
-                    </div>
-                    <div class="col-lg-3">
-                      <label for="editType" class="form-label">Source</label>
-                      <select class="form-select mb-2" aria-label="Status" id="uploadType" name="uploadType">
-                        <option value="">...</option>
-                        <option v-for="(type, typeIndex) of typeList" :key="typeIndex" v-bind:value="type.name">{{ type.name }}</option>
-                      </select>
-                    </div>
-                    <div class="col-lg-3"></div>
-                  </div>
-                  <div class="border rounded" v-for="(file, index) of files" :key="index">
-                    <div class="d-flex align-items-center p-2">
-                      <div class="flex-grow-1">
-                        <div class="pt-1">
-                          <h5 class="fs-14 mb-1" data-dz-name="">
-                            {{ file.name }}
-                          </h5>
-                          <p class="fs-13 text-muted mb-0" data-dz-size="">
-                            <strong>{{ file.size / 1024 }}</strong> KB
-                          </p>
-                          <strong class="error text-danger" data-dz-errormessage=""></strong>
-                        </div>
-                      </div>
-                      <div class="flex-shrink-0 ms-3">
-                        <button data-dz-remove="" class="btn btn-sm btn-danger" @click="deleteRecord">
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="text-end mb-3">
-                    <button type="button" class="btn btn-success w-sm" @click="handleFileUpload">Process File</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- end card -->
-          </form>
-        </div>
-        <!-- end col -->
-
-        <div class="card">
-          <div class="card-body">
-
-            <!-- Tables Border Colors -->
-            <table class="table table-bordered border-secondary table-nowrap" v-if="parsed">
-              <thead>
-              <tr>
-                <th scope="col">
-                  ID
-                </th>
-                <th v-for="(header, key) in content.meta.fields"
-                    v-bind:key="'header-'+key" scope="col">{{ header }}
-                </th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="(row, rowKey) in content.data"
-                  v-bind:key="'row-'+rowKey">
-                <td>
-                  <b>{{ (rowKey+1) }}</b>
-                </td>
-                <td v-for="(column, columnKey) in content.meta.fields"
-                    v-bind:key="'row-'+rowKey+'-column-'+columnKey">
-                  {{ content.data[rowKey][column] }}
-                </td>
-              </tr>
-              </tbody>
-            </table>
-
-          </div>
-        </div>
-        <div class="text-end mb-3">
-          <button type="button" class="btn btn-success w-sm" @click="uploadFile">Upload File</button>
-        </div>
-      </div>
-    </b-modal>
   </Layout>
 </template>
+<style>
+.row-spacer{
+  margin-bottom: 10px;
+}
+</style>

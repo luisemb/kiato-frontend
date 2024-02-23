@@ -20,7 +20,7 @@ export default {
   <h2>Agents</h2>
   <div class="row">
     <div class="col-md-2" v-for="(item, index) in agentsList" :key="index" style="width: 20rem;">
-      <router-link v-bind:to="'/agents/List?n='+item.name">
+      <router-link v-bind:to="'/techs/List?n='+item.name">
         <div class="card card-animate">
           <div class="card-body border border-2" >
             <div class="d-flex justify-content-between">

@@ -15,6 +15,9 @@
     "t-agent-list-kanban": "Agents card List",
     "t-agent-payments": "Agents Payments",
 
+    "t-techs" : "Technicians",
+    "t-techs-tab" : "Technicians",
+    "t-techs-list" : "Techs List",
 
     "t-clients" :"Clients",
     "t-clients-tab": "Clients",
@@ -22,6 +25,9 @@
     "t-clients-list-kanban": "Clients card List",
     "t-clients-deleted" :"Deleted Clientes",
     "t-clients-eContact": "Emgy Contacts",
+
+    "t-workOrders" :"Orders",
+    "t-workOrders-list" :"W/O List",
 
     "t-prospects" :"Prospects",
     "t-prospects-tab": "Prospects",
@@ -34,6 +40,13 @@
     "t-department-list": "Department List",
     "t-upload-lists": "Upload List",
     "t-upload-lists-ntos": "Upload NTO's List",
+
+    "t-location" :"Locations",
+    "t-location-tab": "Locations",
+    "t-location-list": "Locations List",
+
+    "t-parts": "Parts",
+    "t-parts-inv": "Parts Inventory",
 
     "t-clients-map": "Client Map",
 

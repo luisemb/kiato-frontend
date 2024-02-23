@@ -222,7 +222,7 @@ export default {
       }
 
       await axios
-          .post('/api/client/clientStatus', data)
+          .post('/api/workOrder/woStatus', data)
           .then(response => {
             this.statusList = response.data
           })
@@ -238,7 +238,7 @@ export default {
           })
 
       await axios
-          .post('/api/client/clientTypes', data)
+          .post('/api/workOrder/woPriorities', data)
           .then(response => {
             this.typeList = response.data
           })
@@ -297,7 +297,7 @@ export default {
       }
 
       await axios
-          .post('/api/client/uploadList', data)
+          .post('/api/workOrder/uploadList', data)
           .then(async response => {
             if (response.status === 200) {
               await Swal.fire({
@@ -393,7 +393,7 @@ export default {
     }
 
     await axios
-        .post('/api/client/clientStatus', data)
+        .post('/api/workOrder/woStatus', data)
         .then(response => {
           this.statusList = response.data
         })
@@ -409,7 +409,7 @@ export default {
         })
 
     await axios
-        .post('/api/client/clientTypes', data)
+        .post('/api/workOrder/woPriorities', data)
         .then(response => {
           this.typeList = response.data
         })

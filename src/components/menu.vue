@@ -145,7 +145,8 @@ export default {
           <span data-key="t-menu"> {{ $t("t-menu") }} </span>
         </li>
         <li class="nav-item">
-          <a class="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
+          <a class="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse" role="button"
+             aria-expanded="false" aria-controls="sidebarDashboards">
             <i class="ri-dashboard-2-line"></i>
             <span data-key="t-dashboards"> {{ $t("t-dashboards") }}</span>
           </a>
@@ -1015,7 +1016,7 @@ export default {
                   {{ $t("t-pricing") }}
                 </router-link>
               </li>
-              
+
               <li class="nav-item">
                 <router-link
                   to="/pages/maintenance"
@@ -1577,7 +1578,7 @@ export default {
                         {{ $t("t-mixed") }}
                       </router-link>
                     </li>
-                   
+
                     <li class="nav-item">
                       <router-link
                         to="/charts/apex-candlestick"
@@ -1898,7 +1899,7 @@ export default {
               class="nav-link menu-link"
           >
             <CalendarIcon></CalendarIcon>
-            <span data-key="t-calendar-agents-appoinment">{{ $t("t-calendar-agents-appoinment") }}</span>
+            <span data-key="t-calendar-agents-appoinment">{{ $t("t-calendar-techs-appoinment") }}</span>
           </router-link>
         </li>
 
@@ -1918,7 +1919,7 @@ export default {
             aria-controls="sidebarApps"
           >
             <BriefcaseIcon></BriefcaseIcon>
-            <span data-key="t-agents"> {{ $t("t-agents") }}</span>
+            <span data-key="t-agents"> {{ $t("t-techs") }}</span>
           </a>
           <div class="collapse menu-dropdown" id="sidebarApps">
             <ul class="nav nav-sm flex-column">
@@ -1959,11 +1960,11 @@ export default {
             </ul>
           </div>
         </li>
-        <!-- end agents Menu -->
+        <!-- end techs Menu -->
 
         <li class="menu-title" v-if="viewPermission('CLIENTLIST')">
           <i class="ri-more-fill"></i>
-          <span data-key="t-clients-tab">{{ $t("t-clients-tab") }}</span>
+          <span data-key="t-clients-tab">{{ $t("t-workOrders-tab") }}</span>
         </li>
         <li class="nav-item" v-if="viewPermission('CLIENTLIST')">
           <a
@@ -1976,7 +1977,7 @@ export default {
           >
             <UsersIcon></UsersIcon>
             <span data-key="t-clients">{{
-              $t("t-clients")
+              $t("t-workOrders")
             }}</span>
           </a>
           <div class="collapse menu-dropdown" id="sidebarAuth">
@@ -1987,7 +1988,7 @@ export default {
                     class="nav-link"
                     data-key="t-clients-list"
                 >
-                  {{ $t("t-clients-list") }}
+                  {{ $t("t-workOrders-list") }}
                 </router-link>
               </li>
 
@@ -1997,7 +1998,7 @@ export default {
                     class="nav-link"
                     data-key="t-clients-list"
                 >
-                  {{ $t("t-clients-list-kanban") }}
+                  {{ $t("t-workOrders-list-kanban") }}
                 </router-link>
               </li>
 
@@ -2007,7 +2008,7 @@ export default {
                     class="nav-link"
                     data-key="t-clients-eContact"
                 >
-                  {{ $t("t-clients-eContact") }}
+                  {{ $t("t-workOrders-eContact") }}
                   <span class="badge badge-pill bg-danger" data-key="t-new">{{
                       $t("t-new")
                     }}
@@ -2021,7 +2022,7 @@ export default {
                     class="nav-link"
                     data-key="t-clients-map"
                 >
-                  {{ $t("t-clients-map") }}
+                  {{ $t("t-workOrders-map") }}
                 </router-link>
               </li>
 
@@ -2031,13 +2032,13 @@ export default {
                     class="nav-link"
                     data-key="t-clients-deleted"
                 >
-                  {{ $t("t-clients-deleted") }}
+                  {{ $t("t-workOrders-deleted") }}
                 </router-link>
               </li>
             </ul>
           </div>
         </li>
-        <!-- end clients Menu -->
+        <!-- end workOrders Menu -->
 
         <li class="menu-title" v-if="viewPermission('PROSPECTLIST')">
           <i class="ri-more-fill"></i>
@@ -2117,7 +2118,7 @@ export default {
             <ul class="nav nav-sm flex-column">
               <li class="nav-item">
                 <router-link
-                    to="/department/List"
+                    to="/location/List"
                     class="nav-link"
                     data-key="t-department-list">
                   {{ $t("t-department-list") }}
@@ -2161,7 +2162,7 @@ export default {
                     to="/calendar"
                     class="nav-link"
                     data-key="t-reports-agents-productions">
-                  {{ $t("t-reports-agents-productions") }}
+                  {{ $t("t-reports-techs-productions") }}
                 </router-link>
               </li>
             </ul>

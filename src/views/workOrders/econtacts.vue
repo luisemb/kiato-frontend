@@ -175,7 +175,7 @@ export default {
 
       if (this.validEmail(data.potentialClientEmail)) {
         await axios
-            .post('/api/client/emailExists', data)
+            .post('/api/workOrder/emailExists', data)
             .then(response => {
               let div = document.querySelector(".createEmail");
 
@@ -233,7 +233,7 @@ export default {
         }
 
         await axios
-            .put('/api/client/updateeContact', data)
+            .put('/api/workOrder/updateeContact', data)
             .then(async response => {
               if (response) {
                 document.getElementById('close-modal').click();
@@ -367,7 +367,7 @@ export default {
       }
 
       await axios
-          .post('/api/client/getEcontact', data)
+          .post('/api/workOrder/getEcontact', data)
           .then(response => {
             eContactInfo = response.data;
             this.eContactInfo = response.data;
@@ -425,7 +425,7 @@ export default {
 
       if(validate){
         await axios
-            .post('/api/client/getEmergencyContacts', data)
+            .post('/api/workOrder/getEmergencyContacts', data)
             .then(response => {
               this.list = response.data
               this.page = 1
@@ -530,7 +530,7 @@ export default {
       }
 
       await axios
-          .put('/api/client/moveClient', data)
+          .put('/api/workOrder/moveClient', data)
           .then(async response => {
             document.getElementById('closeMove').click();
             if(response.status === 200){
@@ -631,7 +631,7 @@ export default {
       }
 
       await axios
-          .post('/api/client/clientStatus', data)
+          .post('/api/workOrder/woStatus', data)
           .then(response => {
             this.statusList = response.data
           })
@@ -647,7 +647,7 @@ export default {
           })
 
       await axios
-          .post('/api/client/clientTypes', data)
+          .post('/api/workOrder/woPriorities', data)
           .then(response => {
             this.typeList = response.data
           })
@@ -698,7 +698,7 @@ export default {
         }
 
         await axios
-            .post('/api/client/uploadList', data)
+            .post('/api/workOrder/uploadList', data)
             .then(async response => {
               if (response.status === 200) {
                 await Swal.fire({
@@ -852,7 +852,7 @@ export default {
         })
 
     await axios
-        .post('/api/client/clientStatus', data)
+        .post('/api/workOrder/woStatus', data)
         .then(response => {
           this.statusList=response.data
         })
@@ -868,7 +868,7 @@ export default {
         })
 
     await axios
-        .post('/api/client/clientTypes', data)
+        .post('/api/workOrder/woPriorities', data)
         .then(response => {
           this.typeList = response.data
         })
@@ -887,7 +887,7 @@ export default {
       document.getElementById(status).click()
     else
       await axios
-          .post('/api/client/getEmergencyContacts', data)
+          .post('/api/workOrder/getEmergencyContacts', data)
           .then(response => {
             this.list=response.data
             this.page = 1
@@ -950,7 +950,7 @@ export default {
       document.getElementById('rowAdditaments' + button_id).remove()
     });
 
-    // check if some elements shot be visible for agents
+    // check if some elements shot be visible for techs
     this.agentVisible = !!(this.viewUserGroup('SUPER_ADMIN_GROUP') || this.viewUserGroup('ADMIN_GROUP'));
   },
   computed: {

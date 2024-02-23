@@ -20,7 +20,7 @@ import animationData1 from "@/components/widgets/gsqxdxog.json";
 
 export default {
   page: {
-    title: "Departments",
+    title: "Locations",
     meta: [{ name: "description", content: appConfig.description }],
   },
   components: {
@@ -30,14 +30,14 @@ export default {
   },
   data() {
     return {
-      title: "Departments",
+      title: "Locations",
       items: [
         {
-          text: "Departments",
+          text: "Locations",
           href: "/",
         },
         {
-          text: "Department List",
+          text: "Locations List",
           active: true,
         },
       ],
@@ -118,12 +118,12 @@ export default {
               if(error.response.data.detail === 'Your session is expired!'){
                 this.$router.push('logout')
               }
-              Swal.fire("Oops!", "Departments could not be loaded, please contact your SysAdmin.", "error")
+              Swal.fire("Oops!", "Locations could not be loaded, please contact your SysAdmin.", "error")
             }
           })
     },
     editdata(data){
-      document.getElementById('exampleModalLabel').innerHTML="Edit Department"
+      document.getElementById('exampleModalLabel').innerHTML="Edit Location"
       let result = this.companies.findIndex(o => o.departmentID === data.departmentID)
       document.getElementById('id').value=data.departmentID
       document.getElementById('companyname').value=this.companies[result].name;
@@ -146,16 +146,16 @@ export default {
       var since = document.getElementById('since').value
 
       if (name === '') {
-        this.errors.push('Department Name is required.');
+        this.errors.push('Location Name is required.');
       }
       if (owner === '') {
-        this.errors.push('Department Owner is required.');
+        this.errors.push('Location Owner is required.');
       }
       if (location === '') {
-        this.errors.push('Department Location is required.');
+        this.errors.push('Location Location is required.');
       }
       if (since === '') {
-        this.errors.push('Department Since is required.');
+        this.errors.push('Location Since is required.');
       }
 
       if (!this.errors.length) {
@@ -289,16 +289,16 @@ export default {
       var since = document.getElementById('since').value
 
       if (name === '') {
-        this.errors.push('Department Name is required.');
+        this.errors.push('Location Name is required.');
       }
       if (owner === '') {
-        this.errors.push('Department Owner is required.');
+        this.errors.push('Location Owner is required.');
       }
       if (location === '') {
-        this.errors.push('Department Location is required.');
+        this.errors.push('Location Location is required.');
       }
       if (since === '') {
-        this.errors.push('Department Since is required.');
+        this.errors.push('Location Since is required.');
       }
 
       if (!this.errors.length) {
@@ -324,7 +324,7 @@ export default {
                 await Swal.fire({
                   icon: 'success',
                   title: 'Success',
-                  text: 'Department created successfully!'
+                  text: 'Location created successfully!'
                 });
                 await this.getDepartments();
               }
@@ -366,7 +366,7 @@ export default {
     },
     addnew(){
       document.getElementById("addform").reset();
-      document.getElementById('exampleModalLabel').innerHTML="Add Department";
+      document.getElementById('exampleModalLabel').innerHTML="Add Location";
       document.getElementById('add-btn').style.display='block';
       document.getElementById('edit-btn').style.display='none';
     },
@@ -427,7 +427,7 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            Swal.fire("Oops!", "Departments could not be loaded, please contact your SysAdmin.", "error")
+            Swal.fire("Oops!", "Locations could not be loaded, please contact your SysAdmin.", "error")
           }
         })
   },
@@ -444,7 +444,7 @@ export default {
             <div class="d-flex align-items-center flex-wrap gap-2">
               <div class="flex-grow-1">
                 <button class="btn btn-primary add-btn me-1" data-bs-toggle="modal" href="#showModal" @click="addnew">
-                  <i class="ri-add-fill me-1 align-bottom"></i> Add Department
+                  <i class="ri-add-fill me-1 align-bottom"></i> Add Location
                 </button>
               </div>
               <div class="flex-shrink-0">
@@ -481,7 +481,7 @@ export default {
                       ID
                     </th>
                     <th class="sort" data-sort="name" scope="col">
-                      Department Name
+                      Location Name
                     </th>
                     <th class="sort" data-sort="leader" scope="col">Leader</th>
                     <th class="sort" data-sort="location" scope="col">
@@ -615,8 +615,8 @@ export default {
                 </div>
               </div>
             </div>
-            <h5 class="mt-3 mb-1" id="cname">DMB Group</h5>
-            <p class="text-muted" id="oname">Daniela Etchegoyen</p>
+            <h5 class="mt-3 mb-1" id="cname">NCR Electronics Corp.</h5>
+            <p class="text-muted" id="oname">Nestor Ructtinger</p>
 
             <ul class="list-inline mb-0">
               <li class="list-inline-item avatar-xs">
@@ -642,17 +642,17 @@ export default {
                 <tbody>
                 <tr>
                   <td class="fw-medium" scope="row">Location</td>
-                  <td id="loc">Damascus, Syria</td>
+                  <td id="loc">Houston, Texas</td>
                 </tr>
                 <tr>
                   <td class="fw-medium" scope="row">Website</td>
                   <td>
-                    <a href="javascript:void(0);" class="link-primary text-decoration-underline" id="webs">www.dmbgroup.online</a>
+                    <a href="javascript:void(0);" class="link-primary text-decoration-underline" id="webs">www.ncrfix.com</a>
                   </td>
                 </tr>
                 <tr>
                   <td class="fw-medium" scope="row">Contact Email</td>
-                  <td id="eml">info@syntycesolution.com</td>
+                  <td id="eml">ncr.contact2@gmail.com</td>
                 </tr>
                 <tr>
                   <td class="fw-medium" scope="row">Since</td>
@@ -720,7 +720,7 @@ export default {
             <div class="modal-footer">
               <div class="hstack gap-2 justify-content-end">
                 <button type="button" class="btn btn-light" id="closemodal" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-success" id="add-btn" @click="addorder">Add Department</button>
+                <button type="submit" class="btn btn-success" id="add-btn" @click="addorder">Add Location</button>
                 <button type="button" class="btn btn-success" id="edit-btn" @click="updateorder">Update</button>
               </div>
             </div>

@@ -227,7 +227,7 @@ export default {
       }
 
       await axios
-          .put('/api/client/updateClientStatus', data)
+          .put('/api/workOrder/updateClientStatus', data)
           .then(async response => {
 
             if (response) {
@@ -483,7 +483,7 @@ export default {
         }
 
         await axios
-            .put('/api/client/updateClient', data)
+            .put('/api/workOrder/updateClient', data)
             .then(async response => {
               if (response) {
                 document.getElementById('close-modal').click();
@@ -588,7 +588,7 @@ export default {
         }
 
         await axios
-            .post('/api/client/create', data)
+            .post('/api/workOrder/create', data)
             .then(async response => {
               if (response.data['ID'] !== null) {
                 document.getElementById('closemodal').click();
@@ -744,7 +744,7 @@ export default {
 
       if(validate){
         await axios
-            .post('/api/client/listClientsByStatus', data)
+            .post('/api/workOrder/listClientsByStatus', data)
             .then(response => {
               this.isClientList = (window.location.href.match('/client/') !== null) ? true : false;
               let res = response.data
@@ -1253,7 +1253,7 @@ export default {
       }
 
       await axios
-          .post('/api/client/getecontacts', data)
+          .post('/api/workOrder/getecontacts', data)
           .then(response => {
             // document.getElementById('eContactList').innerHTML = "";
             this.eContactlist = []
@@ -1276,7 +1276,7 @@ export default {
       }
 
       await axios
-          .post('/api/client/getbeneficiaries', data)
+          .post('/api/workOrder/getbeneficiaries', data)
           .then(response => {
             // document.getElementById('eContactList').innerHTML = "";
             this.benList = []
@@ -1299,7 +1299,7 @@ export default {
       }
 
       await axios
-          .post('/api/client/getAdditaments', data)
+          .post('/api/workOrder/getAdditaments', data)
           .then(response => {
             // document.getElementById('eContactList').innerHTML = "";
             this.additamentsList = [];
@@ -1324,7 +1324,7 @@ export default {
 
       if (this.validEmail(data.potentialClientEmail)) {
         await axios
-            .post('/api/client/emailExists', data)
+            .post('/api/workOrder/emailExists', data)
             .then(response => {
               let div = document.querySelector(".createEmail");
 
@@ -1628,7 +1628,7 @@ export default {
               }
 
               axios
-                  .put('/api/client/delete', data)
+                  .put('/api/workOrder/delete', data)
                   .then(async response => {
                     if (response) {
                       await this.updateClientList()
@@ -1761,7 +1761,7 @@ export default {
         })
 
     await axios
-        .post('/api/client/clientStatus', data)
+        .post('/api/workOrder/woStatus', data)
         .then(response => {
           this.statusList = response.data
         })
@@ -1772,7 +1772,7 @@ export default {
         })
 
     await axios
-        .post('/api/client/clientTypes', data)
+        .post('/api/workOrder/woPriorities', data)
         .then(response => {
           this.typeList = response.data
         })
@@ -1783,7 +1783,7 @@ export default {
         })
 
     await axios
-        .post('/api/client/listClientsByStatus', data)
+        .post('/api/workOrder/listClientsByStatus', data)
         .then(response => {
           this.isClientList = (window.location.href.match('/client/') !== null) ? true : false;
 

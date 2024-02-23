@@ -2,38 +2,40 @@ import { createWebHistory, createRouter } from "vue-router";
 import jwt_decode from "jwt-decode";
 import { store } from '@/state/store'
 
-import Dashboard from '../views/dashboard/crm/index.vue'
-import Login from '../views/authentication/login.vue'
-import Register from '../views/authentication/register.vue'
-import agentsInterviews from '../views/authentication/scheduleAgentInterview.vue'
-import Logout from '../views/authentication/logout/logout.vue'
-import PageNotFound from '../views/auth/errors/404-cover.vue'
-import agentList from '../views/agents/agentslist'
-import successInterview from '../views/agents/succesInterview'
-import agentListKanban from '../views/agents/agentlistkanban'
-import agentPayment from '../views/agents/agentPayments'
-import scheduleInterviews from '../views/agents/scheduleInterviews.vue'
-import clientList from '../views/clients/clientlist'
-import deletedClientList from '../views/clients/deletedClients'
-import clientListKanban from '../views/clients/clientskanban'
-import errorPage from '../views/auth/errors/404-cover.vue'
+import Dashboard from '../views/dashboard/crm/index'
+import Login from '../views/authentication/login'
+import Register from '../views/authentication/register'
+import agentsInterviews from '../views/authentication/scheduleAgentInterview'
+import Logout from '../views/authentication/logout/logout'
+import PageNotFound from '../views/auth/errors/404-cover'
+import techList from '../views/techs/techlist'
+import successInterview from '../views/techs/succesInterview'
+import agentListKanban from '../views/techs/agentlistkanban'
+import agentPayment from '../views/techs/agentPayments'
+import scheduleInterviews from '../views/techs/scheduleInterviews'
+import workOrdersList from '../views/workOrders/workorderslist'
+import deletedClientList from '../views/workOrders/deletedClients'
+import clientListKanban from '../views/workOrders/clientskanban'
+import errorPage from '../views/auth/errors/404-cover'
 import prospectList from '../views/prospects/prospectlist'
 import prospectListKanban from '../views/prospects/prospectkaban'
 import deletedProspects from '../views/prospects/deletedProspects'
-import departmentList from '../views/departments/departmentList'
+import locationList from '../views/departments/departmentList'
 import calendar from '../views/calendar/agentCalendar'
 import agentsAppoinments from '../views/calendar/agentsAppoinments'
 import test from '../views/apps/chat.vue'
 import scheduleMessages from '../views/communication/scheduleMessages'
-import profile from '../views/agents/profile'
+import profile from '../views/techs/profile'
 import phoneCall from '../views/phoneCalls'
-import agentApproval from '../views/agents/approval'
+import agentApproval from '../views/techs/approval'
 import resetPassword from '../views/authentication/resetPassword'
 import changePassword from '../views/authentication/changePasssword'
 import uploadWalkingList from '../views/prospects/uploadWalkingLists'
-import clientsMap from '../views/clients/clientsMap'
-import eContacts from '../views/clients/econtacts'
+import clientsMap from '../views/workOrders/clientsMap'
+import eContacts from '../views/workOrders/econtacts'
 import termsAndConditions from '../views/termAndConditions'
+import taskList from '../views/workOrders/taskList.vue'
+import inventoryList from '../views/inventory/inventory.vue'
 
 
 const routes = [
@@ -75,16 +77,16 @@ const routes = [
     component: PageNotFound,
   },
   {
-    path: '/agents/List',
-    name: 'agentList',
-    component: agentList,
+    path: '/techs/List',
+    name: 'techList',
+    component: techList,
     meta: {
       requireLogin: true,
       permissions: ['AGENTLIST']
     }
   },
   {
-    path: '/agents/ListCard',
+    path: '/techs/ListCard',
     name: 'agentListKanban',
     component: agentListKanban,
     meta: {
@@ -93,7 +95,7 @@ const routes = [
     }
   },
   {
-    path: '/agents/payments',
+    path: '/techs/payments',
     name: 'agentPayments',
     component: agentPayment,
     meta: {
@@ -102,9 +104,9 @@ const routes = [
     }
   },
   {
-    path: '/client/List',
-    name: 'clientList',
-    component: clientList,
+    path: '/workOrders/List',
+    name: 'workOrdersList',
+    component: workOrdersList,
     meta: {
       requireLogin: true,
       permissions: ['CLIENTLIST']
@@ -156,7 +158,7 @@ const routes = [
     }
   },
   {
-    path: '/agents/approval',
+    path: '/techs/approval',
     name: 'agentsApproval',
     component: agentApproval,
     meta: {
@@ -165,9 +167,9 @@ const routes = [
     }
   },
   {
-    path: '/department/List',
-    name: 'departmentList',
-    component: departmentList,
+    path: '/locationsList',
+    name: 'locationList',
+    component: locationList,
     meta: {
       requireLogin: true,
       permissions: ['DEPARTMENTLIST']
@@ -267,7 +269,7 @@ const routes = [
   },
 
   {
-    path: '/clients/map',
+    path: '/workOrders/map',
     name: 'clientMap',
     meta: {
       requireLogin: true,
@@ -283,6 +285,24 @@ const routes = [
       permissions: ['CLIENTLIST']
     },
     component: termsAndConditions
+  },
+  {
+    path: '/techs/taskList',
+    name: 'agentListKanban',
+    component: taskList,
+    meta: {
+      requireLogin: true,
+      permissions: ['AGENTLIST']
+    }
+  },
+  {
+    path: '/inventoryList',
+    name: 'inventoryList',
+    component: inventoryList,
+    meta: {
+      requireLogin: true,
+      permissions: ['DEPARTMENTLIST']
+    }
   },
 ]
 

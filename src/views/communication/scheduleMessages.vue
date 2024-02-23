@@ -571,7 +571,7 @@ export default {
         }
 
         await axios
-            .post('/api/client/listClients', data)
+            .post('/api/workOrder/listWorkOrders', data)
             .then(response => {
               this.list = response.data
               this.page = 1
@@ -589,7 +589,7 @@ export default {
             })
 
         await axios
-            .post('/api/client/clientStatus', data)
+            .post('/api/workOrder/woStatus', data)
             .then(response => {
               this.statusList = response.data
             })
@@ -605,7 +605,7 @@ export default {
             })
 
         await axios
-            .post('/api/client/clientTypes', data)
+            .post('/api/workOrder/woPriorities', data)
             .then(response => {
               this.typeList = response.data
             })
@@ -753,7 +753,7 @@ export default {
       }
 
       await axios
-          .post('/api/client/clientStatus', data)
+          .post('/api/workOrder/woStatus', data)
           .then(response => {
             this.statusList=response.data
           })
@@ -769,7 +769,7 @@ export default {
           })
 
       await axios
-          .post('/api/client/clientTypes', data)
+          .post('/api/workOrder/woPriorities', data)
           .then(response => {
             this.typeList = response.data
           })

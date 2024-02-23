@@ -273,10 +273,7 @@ export default {
         if (newVal !== oldVal) {
           switch (newVal) {
             case "horizontal":
-              document.documentElement.setAttribute(
-                "data-layout",
-                "horizontal"
-              );
+              document.documentElement.setAttribute("data-layout", "horizontal");
               break;
             case "vertical":
               document.documentElement.setAttribute("data-layout", "vertical");
@@ -293,8 +290,8 @@ export default {
 </script>
 
 <template>
-  <div style="display: none;">
-    <div class="customizer-setting d-none d-md-block" style="display: none;">
+  <div>
+    <div class="customizer-setting d-none d-md-block">
       <div class="btn-info btn-rounded shadow-lg btn btn-icon btn-lg p-2" data-bs-toggle="offcanvas" data-bs-target="#theme-settings-offcanvas" aria-controls="theme-settings-offcanvas" id="mdi-cog">
         <i class="mdi mdi-spin mdi-cog-outline fs-22"></i>
       </div>
@@ -364,49 +361,49 @@ export default {
                 </div>
                 <h5 class="fs-13 text-center mt-2">Horizontal</h5>
               </div>
-<!--              <div class="col-4">-->
-<!--                <div class="form-check card-radio">-->
-<!--                  <input-->
-<!--                    id="customizer-layout03"-->
-<!--                    name="data-layout"-->
-<!--                    type="radio"-->
-<!--                    value="twocolumn"-->
-<!--                    class="form-check-input"-->
-<!--                    v-model="layoutType"-->
-<!--                  />-->
-<!--                  <label-->
-<!--                    class="form-check-label p-0 avatar-md w-100"-->
-<!--                    for="customizer-layout03"-->
-<!--                  >-->
-<!--                    <span class="d-flex gap-1 h-100">-->
-<!--                      <span class="flex-shrink-0">-->
-<!--                        <span class="bg-light d-flex h-100 flex-column gap-1">-->
-<!--                          <span class="d-block p-1 bg-soft-primary mb-2"></span>-->
-<!--                          <span class="d-block p-1 pb-0 bg-soft-primary"></span>-->
-<!--                          <span class="d-block p-1 pb-0 bg-soft-primary"></span>-->
-<!--                          <span class="d-block p-1 pb-0 bg-soft-primary"></span>-->
-<!--                        </span>-->
-<!--                      </span>-->
-<!--                      <span class="flex-shrink-0">-->
-<!--                        <span class="bg-light d-flex h-100 flex-column gap-1 p-1">-->
-<!--                          <span class="d-block p-1 px-2 pb-0 bg-soft-primary"></span>-->
-<!--                          <span class="d-block p-1 px-2 pb-0 bg-soft-primary"></span>-->
-<!--                          <span class="d-block p-1 px-2 pb-0 bg-soft-primary"></span>-->
-<!--                          <span class="d-block p-1 px-2 pb-0 bg-soft-primary"></span>-->
-<!--                        </span>-->
-<!--                      </span>-->
-<!--                      <span class="flex-grow-1">-->
-<!--                        <span class="d-flex h-100 flex-column">-->
-<!--                          <span class="bg-light d-block p-1"></span>-->
-<!--                          <span class="bg-light d-block p-1 mt-auto"></span>-->
-<!--                        </span>-->
-<!--                      </span>-->
-<!--                    </span>-->
-<!--                  </label>-->
-<!--                </div>-->
-<!--                <h5 class="fs-13 text-center mt-2">Two Column</h5>-->
-<!--              </div>-->
-              <!-- end col -->
+              <div class="col-4">
+                <div class="form-check card-radio">
+                  <input
+                    id="customizer-layout03"
+                    name="data-layout"
+                    type="radio"
+                    value="twocolumn"
+                    class="form-check-input"
+                    v-model="layoutType"
+                  />
+                  <label
+                    class="form-check-label p-0 avatar-md w-100"
+                    for="customizer-layout03"
+                  >
+                    <span class="d-flex gap-1 h-100">
+                      <span class="flex-shrink-0">
+                        <span class="bg-light d-flex h-100 flex-column gap-1">
+                          <span class="d-block p-1 bg-soft-primary mb-2"></span>
+                          <span class="d-block p-1 pb-0 bg-soft-primary"></span>
+                          <span class="d-block p-1 pb-0 bg-soft-primary"></span>
+                          <span class="d-block p-1 pb-0 bg-soft-primary"></span>
+                        </span>
+                      </span>
+                      <span class="flex-shrink-0">
+                        <span class="bg-light d-flex h-100 flex-column gap-1 p-1">
+                          <span class="d-block p-1 px-2 pb-0 bg-soft-primary"></span>
+                          <span class="d-block p-1 px-2 pb-0 bg-soft-primary"></span>
+                          <span class="d-block p-1 px-2 pb-0 bg-soft-primary"></span>
+                          <span class="d-block p-1 px-2 pb-0 bg-soft-primary"></span>
+                        </span>
+                      </span>
+                      <span class="flex-grow-1">
+                        <span class="d-flex h-100 flex-column">
+                          <span class="bg-light d-block p-1"></span>
+                          <span class="bg-light d-block p-1 mt-auto"></span>
+                        </span>
+                      </span>
+                    </span>
+                  </label>
+                </div>
+                <h5 class="fs-13 text-center mt-2">Two Column</h5>
+              </div>
+<!--               end col-->
             </div>
 
             <h6 class="mt-4 mb-0 fw-semibold text-uppercase">Color Scheme</h6>

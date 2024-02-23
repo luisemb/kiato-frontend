@@ -91,7 +91,7 @@ export default {
                                     >
                                         <div class="toast-header">
                                             <img
-                                                src="@/assets/images/logo-sm.png"
+                                                src="@/assets/images/kiato_logo.png"
                                                 class="rounded me-2"
                                                 alt="..."
                                                 height="20"
@@ -128,7 +128,7 @@ export default {
                                             >
                                                 <div class="toast-header">
                                                     <img
-                                                        src="@/assets/images/logo-sm.png"
+                                                        src="@/assets/images/kiato_logo.png"
                                                         class="rounded me-2"
                                                         alt="..."
                                                         height="20"
@@ -171,7 +171,7 @@ export default {
                                             >
                                                 <div class="toast-header">
                                                     <img
-                                                        src="@/assets/images/logo-sm.png"
+                                                        src="@/assets/images/kiato_logo.png"
                                                         class="rounded me-2"
                                                         alt="..."
                                                         height="20"
@@ -197,7 +197,7 @@ export default {
                                             >
                                                 <div class="toast-header">
                                                     <img
-                                                        src="@/assets/images/logo-sm.png"
+                                                        src="@/assets/images/kiato_logo.png"
                                                         class="rounded me-2"
                                                         alt="..."
                                                         height="20"
@@ -255,7 +255,7 @@ export default {
                                                 >
                                                     <div class="toast-header">
                                                         <img
-                                                            src="@/assets/images/logo-sm.png"
+                                                            src="@/assets/images/kiato_logo.png"
                                                             class="rounded me-2"
                                                             alt="..."
                                                             height="20"
@@ -303,7 +303,7 @@ export default {
                                                 >
                                                     <div class="toast-header">
                                                         <img
-                                                            src="@/assets/images/logo-sm.png"
+                                                            src="@/assets/images/kiato_logo.png"
                                                             class="rounded me-2"
                                                             alt="..."
                                                             height="20"

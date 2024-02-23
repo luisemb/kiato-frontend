@@ -87,6 +87,7 @@ export default {
         document.querySelector(".hamburger-icon").classList.toggle("open");
 
       //For collapse horizontal menu
+      console.log(document.documentElement.getAttribute("data-layout"))
       if (
         document.documentElement.getAttribute("data-layout") === "horizontal"
       ) {
@@ -259,6 +260,8 @@ export default {
     }
   },
   mounted() {
+    // document.documentElement.setAttribute("data-layout", "horizontal");
+
     if (document.getElementById("topnav-hamburger-icon"))
       document
           .getElementById("topnav-hamburger-icon")
@@ -300,6 +303,7 @@ export default {
         }, 100);
       }
     }
+
   },
   computed: {
     ...layoutComputed,
@@ -405,19 +409,19 @@ export default {
           <div class="navbar-brand-box horizontal-logo">
             <router-link to="/" class="logo logo-dark">
               <span class="logo-sm">
-                <img src="@/assets/images/logo-sm.png" alt="" height="22" />
+                <img src="@/assets/images/kiato_logo.png" alt="" height="22" />
               </span>
               <span class="logo-lg">
-                <img src="@/assets/images/logo-dark.png" alt="" height="17" />
+                <img src="@/assets/images/kiato_logo.png" alt="" height="50" />
               </span>
             </router-link>
 
             <router-link to="/" class="logo logo-light">
               <span class="logo-sm">
-                <img src="@/assets/images/logo-sm.png" alt="" height="22" />
+                <img src="@/assets/images/kiato_logo.png" alt="" height="22" />
               </span>
               <span class="logo-lg">
-                <img src="@/assets/images/logo-light.png" alt="" height="17" />
+                <img src="@/assets/images/kiato_logo.png" alt="" height="50" />
               </span>
             </router-link>
           </div>

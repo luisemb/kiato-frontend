@@ -79,7 +79,7 @@ export default {
         }
 
         await axios
-            .post('/api/client/createecontacts', data)
+            .post('/api/workOrder/createecontacts', data)
             .then(async response => {
               this.$emit('eContactData', response);
 

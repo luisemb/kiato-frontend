@@ -26,12 +26,12 @@ export default {
         token: localStorage.getItem('jwt'),
       }
 
-      const pattern = '/client/';
-      const pattern2 = '/prospects/';
+      const pattern = '/taskList/';
+      const pattern2 = '/techs/';
       if(window.location.href.match(pattern) || window.location.href.match(pattern2)) {
 
         await axios
-            .post('/api/client/saveClientNote', data)
+            .post('/api/workOrder/saveWoNote', data)
             .then(async response => {
 
               if (response.status === 200) {

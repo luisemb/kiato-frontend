@@ -15,6 +15,10 @@
     "t-agent-list-kanban": "Lista de Agentes (tarjetas)",
     "t-agent-payments": "Pagos de Agentes",
 
+    "t-techs" : "Técnicos",
+    "t-techs-tab" : "Técnicos",
+    "t-techs-list" : "Lista De Técnicos",
+
     "t-clients" :"Clientes",
     "t-clients-tab": "Clientes",
     "t-clients-list": "List de Clientes",
@@ -34,6 +38,13 @@
     "t-department-list": "List de Departamentos",
     "t-upload-lists": "Cargar Lista",
     "t-upload-lists-ntos": "Cargar Lista de NTO's",
+
+    "t-location" :"Ubicaciones",
+    "t-location-tab": "Ubicaciones",
+    "t-location-list": "List de Ubicaciones",
+
+    "t-parts": "Partes",
+    "t-parts-inv": "Inventario De Partes",
 
     "t-clients-map": "Mapa de Clientes",
 

@@ -32,7 +32,7 @@ export default {
       if(window.location.href.match(pattern)) {
 
         await axios
-            .post('/api/client/saveClientNote', data)
+            .post('/api/workOrder/saveClientNote', data)
             .then(async response => {
 
               if (response.status === 200) {
@@ -258,7 +258,7 @@ export default {
         }
 
         await axios
-            .post('/api/client/uploadClientList', data)
+            .post('/api/workOrder/uploadClientList', data)
             .then(async response => {
 
               if (response) {

@@ -136,7 +136,7 @@ export default {
       }
 
       await axios
-          .put('/api/client/updateClientStatus', data)
+          .put('/api/workOrder/updateClientStatus', data)
           .then(async response => {
 
             if (response) {
@@ -221,7 +221,7 @@ export default {
       let clientInfo;
 
       await axios
-          .post('/api/client/getClient', data)
+          .post('/api/workOrder/getClient', data)
           .then(response => {
             clientInfo = response.data
             this.$emit('userData', clientInfo);

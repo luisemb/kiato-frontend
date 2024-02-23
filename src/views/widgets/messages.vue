@@ -62,7 +62,7 @@ export default {
 
       if(validate){
         await axios
-            .post('api/client/sendSMS', data)
+            .post('api/workOrder/sendSMS', data)
             .then(async response => {
               if (response.status === 200) {
                 document.getElementById('userMessage'+this.idNumber).value = ''

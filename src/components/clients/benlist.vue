@@ -84,7 +84,7 @@ export default {
         }
 
         await axios
-            .post('/api/client/createbeneficiary', data)
+            .post('/api/workOrder/createbeneficiary', data)
             .then(async response => {
               this.$emit('benData', response);
 
